@@ -1,17 +1,9 @@
 import React from 'react';
 import { createAppContainer, createBottomTabNavigator, NavigationContainer, NavigationContainerProps, NavigationRoute } from 'react-navigation';
-import {
-  BottomNavigation,
-  BottomNavigationTab,
-  BottomNavigationProps,
-} from 'react-native-ui-kitten';
-// import { Ionicons } from "@expo/vector-icons";
-import {Image} from 'react-native'
+import { Ionicons, Feather } from "@expo/vector-icons";
 
 import VotingScreen  from './screens/voting';
 import FeedScreen  from './screens/feed';
-
-type CommonNavigationProps = NavigationProps & NavigationContainerProps;
 
 export const TabNavigatorScreen = createBottomTabNavigator(
   {
@@ -20,26 +12,42 @@ export const TabNavigatorScreen = createBottomTabNavigator(
   },
   {
     initialRouteName: 'Home',
-    tabBarComponent: BottomNavigationShowcase,
+    defaultNavigationOptions: ({navigation}) => ({
+      tabBarIcon: ({focused, horizontal, tintColor}) => {
+        const {routeName} = navigation.state;
+        let IconComponent = Feather;
+        let iconName;
+        if(routeName === 'Home') {
+          iconName = 'home'
+        } else if (routeName === "Voting") {
+          iconName = "send"
+        }
+
+        return <IconComponent name={iconName} size={30} color={tintColor} />
+      }
+    }),
+    tabBarOptions: {
+      activeTintColor: '#47578f',
+      inactiveTintColor: '#d4d4d4',
+      showLabel: false,
+      showIcon: true,
+      style: {
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        borderTopColor: 'white',
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 10,
+          height: 10,
+        },
+        shadowOpacity: 0.57,
+        shadowRadius: 5.65,
+        
+        elevation: 7,
+        height: 65
+      }
+    }
   }
 );
-
-export const BottomNavigationShowcase = (BottomNavigationProps) => {
-  const onTabSelect = (selectedIndex) => {
-    const { selectedRoute } = props.navigation.state.routes;
-
-    navigation.navigate(selectedRoute.routename);
-  };
-  return (
-    <BottomNavigation
-      appearance='noIndicator'
-      selectedIndex={props.navigation.state.index}
-      onSelect={onTabSelect}>
-        <BottomNavigationTab icon={<Image source={require('./assets/evaicons/outline/svg/home-outline.svg')}/>} title='Home'/>
-        <BottomNavigationTab title='Voting'/>
-      </BottomNavigation>
-  )
-}
-
 export default createAppContainer(TabNavigatorScreen);
 
