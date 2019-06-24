@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View, ListRenderItemInfo, FlatList } from 'react-native';
+import FeedCard from '../components/feed/CustomCard';
+import { default as Text } from '../components/Text'
 
 export default class FeedScreen extends Component {
     render() {
       return (
         <View style={styles.container}>
-          <Text>Feed</Text>
+            <Text h1>Feed</Text>
         </View>
       );
     }

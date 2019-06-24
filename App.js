@@ -1,53 +1,58 @@
 import React from 'react';
-import { createAppContainer, createBottomTabNavigator, NavigationContainer, NavigationContainerProps, NavigationRoute } from 'react-navigation';
-import { Ionicons, Feather } from "@expo/vector-icons";
+import { AppLoading } from 'expo';
+import * as Font from 'expo-font';
+import AppNavigator from './navigation/AppNavigator';
 
-import VotingScreen  from './screens/voting';
-import FeedScreen  from './screens/feed';
+export default class App extends React.Component {
+  state = {
+    isLoadingComplete: false
+  }
 
-export const TabNavigatorScreen = createBottomTabNavigator(
-  {
-  Home: FeedScreen,
-  Voting: VotingScreen,
-  },
-  {
-    initialRouteName: 'Home',
-    defaultNavigationOptions: ({navigation}) => ({
-      tabBarIcon: ({focused, horizontal, tintColor}) => {
-        const {routeName} = navigation.state;
-        let IconComponent = Feather;
-        let iconName;
-        if(routeName === 'Home') {
-          iconName = 'home'
-        } else if (routeName === "Voting") {
-          iconName = "send"
-        }
-
-        return <IconComponent name={iconName} size={30} color={tintColor} />
-      }
-    }),
-    tabBarOptions: {
-      activeTintColor: '#47578f',
-      inactiveTintColor: '#d4d4d4',
-      showLabel: false,
-      showIcon: true,
-      style: {
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20,
-        borderTopColor: 'white',
-        shadowColor: "#000",
-        shadowOffset: {
-          width: 10,
-          height: 10,
-        },
-        shadowOpacity: 0.57,
-        shadowRadius: 5.65,
-        
-        elevation: 7,
-        height: 65
-      }
+  render() {
+    if(!this.state.isLoadingComplete) {
+      return (
+        <AppLoading
+          startAsync={this._loadResourcesAsync}
+          onError={this._handleLoadingError}
+          onFinish={this._handleFinishLoading}
+          />
+      );
+    } else {
+      return (
+        <AppNavigator/>
+      )
     }
   }
-);
-export default createAppContainer(TabNavigatorScreen);
+
+  _loadResourcesAsync = async () => {
+    return Promise.all([
+      Font.loadAsync({
+        // This is the font that we are using for our tab bar
+        // ...Icon.Ionicons.font,
+        'Rubik-Black': require('./assets/fonts/Rubik-Black.ttf'),
+        'Rubik-BlackItalic': require('./assets/fonts/Rubik-BlackItalic.ttf'),
+        'Rubik-Bold': require('./assets/fonts/Rubik-Bold.ttf'),
+        'Rubik-BoldItalic': require('./assets/fonts/Rubik-BoldItalic.ttf'),
+        'Rubik-Italic': require('./assets/fonts/Rubik-Italic.ttf'),
+        'Rubik-Light': require('./assets/fonts/Rubik-Light.ttf'),
+        'Rubik-LightItalic': require('./assets/fonts/Rubik-LightItalic.ttf'),
+        'Rubik-Medium': require('./assets/fonts/Rubik-Medium.ttf'),
+        'Rubik-MediumItalic': require('./assets/fonts/Rubik-MediumItalic.ttf'),
+        'Rubik-Regular': require('./assets/fonts/Rubik-Regular.ttf'),
+      }),
+    ]);
+  };
+
+  _handleLoadingError = (error) => {
+    //handle error reporting later!
+  }
+
+  _handleFinishLoading = () => {
+    this.setState({isLoadingComplete: true});
+  }
+
+
+}
+
+
 
