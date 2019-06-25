@@ -14,7 +14,6 @@ export default createBottomTabNavigator(
     Voting: VotingScreen,
     },
     {
-      animationEnabled: true,
       initialRouteName: 'Home',
       defaultNavigationOptions: ({navigation}) => ({
         tabBarIcon: ({focused, horizontal, tintColor}) => {
@@ -29,7 +28,7 @@ export default createBottomTabNavigator(
               iconName="calendar"
           }
   
-          return <IconComponent name={iconName} size={30} color={tintColor} />
+          return <IconComponent name={iconName} size={heightPercentageToDP('4%')} color={tintColor} />
         }
       }),
       tabBarOptions: {

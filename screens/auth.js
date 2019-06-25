@@ -37,6 +37,7 @@ export default class LoginScreen extends Component {
     _syncUserWithStateAsync = async () => {
         const data = await GoogleSignIn.signInSilentlyAsync()
             if(data) {
+                this.setState({isLoggingIn: true})
                 const photoURL = await GoogleSignIn.getPhotoAsync(256);
                 const userData = await GoogleSignIn.getCurrentUserAsync();
                 await this.setState({

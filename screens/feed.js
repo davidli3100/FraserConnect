@@ -3,7 +3,7 @@ import { StyleSheet, View, ListRenderItemInfo, FlatList, Button, AsyncStorage } 
 import FeedCard from '../components/feed/CustomCard';
 import { default as Text } from '../components/Text'
 import * as GoogleSignIn from 'expo-google-sign-in';
-import FeedHeader from '../components/feed/FeedHeader';
+import Header from '../components/global/Header';
 import {widthPercentageToDP, heightPercentageToDP} from '../constants/Normalize'
 
 export default class FeedScreen extends Component {
@@ -24,8 +24,7 @@ export default class FeedScreen extends Component {
     render() {
       return (
         <View style={styles.container}>
-
-            <FeedHeader avatarName={this.state.user["userName"]} avatarSrc={this.state.user["userPhoto"]}/>
+            <Header screenName="Announcements"/>
         </View>
       );
     }
