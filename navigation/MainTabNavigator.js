@@ -4,11 +4,13 @@ import { Feather } from "@expo/vector-icons";
 
 import FeedScreen from '../screens/feed';
 import VotingScreen from "../screens/voting";
+import EventsScreen from "../screens/events"
 
 export default createBottomTabNavigator(
   
     {
     Home: FeedScreen,
+    Events: EventsScreen,
     Voting: VotingScreen,
     },
     {
@@ -22,6 +24,8 @@ export default createBottomTabNavigator(
             iconName = 'home'
           } else if (routeName === "Voting") {
             iconName = "send"
+          } else if (routeName === "Events") {
+              iconName="calendar"
           }
   
           return <IconComponent name={iconName} size={30} color={tintColor} />

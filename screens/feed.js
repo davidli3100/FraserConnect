@@ -3,6 +3,8 @@ import { StyleSheet, View, ListRenderItemInfo, FlatList, Button, AsyncStorage } 
 import FeedCard from '../components/feed/CustomCard';
 import { default as Text } from '../components/Text'
 import * as GoogleSignIn from 'expo-google-sign-in';
+import FeedHeader from '../components/feed/FeedHeader';
+import {widthPercentageToDP, heightPercentageToDP} from '../constants/Normalize'
 
 export default class FeedScreen extends Component {
     constructor(props) {
@@ -22,13 +24,8 @@ export default class FeedScreen extends Component {
     render() {
       return (
         <View style={styles.container}>
-            <Text h1>Feed</Text>
-            <Button onPress={this._asyncLogOut} title="Sign Out">
-              Sign Out
-            </Button>
-            <Text>
-                {this.state.user["userName"]}
-            </Text>
+          
+            <FeedHeader avatarName={this.state.user["userName"]} avatarSrc={this.state.user["userPhoto"]}/>
         </View>
       );
     }
@@ -100,11 +97,10 @@ export default class FeedScreen extends Component {
     }
   }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center"
-  }
+  const styles = StyleSheet.create({
+    container: {
+      marginLeft: widthPercentageToDP('3%'),
+      marginRight: widthPercentageToDP('3%'),
+      marginTop: heightPercentageToDP('3.5%'),
+    },
 });

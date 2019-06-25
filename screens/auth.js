@@ -68,10 +68,9 @@ export default class LoginScreen extends Component {
     render() {
         const {user} = this.state;
         return (
-        <View>
+        <View style={styles.container}>
             <Text h2>Login</Text>
             <Button onPress={this._signInAsync} title="Sign In With Google">{this.buttonTitle}</Button>
-            <Text h5>Signed In</Text>
         </View>
         )
     }
@@ -101,3 +100,12 @@ export default class LoginScreen extends Component {
         }
 
 }
+
+const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: "#fff",
+      alignItems: "center",
+      justifyContent: "center"
+    }
+  });

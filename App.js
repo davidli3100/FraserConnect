@@ -2,6 +2,7 @@ import React from 'react';
 import { AppLoading } from 'expo';
 import * as Font from 'expo-font';
 import AppNavigator from './navigation/AppNavigator';
+import {View, StatusBar} from 'react-native'
 
 export default class App extends React.Component {
   state = {
