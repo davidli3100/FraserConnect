@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {StyleSheet, View, Button, AsyncStorage} from 'react-native';
+import {StyleSheet, View, Button, AsyncStorage, ActivityIndicator} from 'react-native';
 import {default as Text} from '../components/Text';
 import * as GoogleSignIn from 'expo-google-sign-in';
 import { Google } from 'expo';
@@ -9,14 +9,11 @@ GoogleSignIn.allowInClient();
 
 export default class LoginScreen extends Component {
 
-    
-    static navigationOptions = {
-        title: 'Log In With Google'
-    }
-
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            isLoggingIn: false
+        };
 
     }
 
@@ -48,7 +45,7 @@ export default class LoginScreen extends Component {
                         photoURL: photoURL || userData.photoURL,
                     },
                 })
-                const userAsyncData = await AsyncStorage.setItem('user', JSON.stringify(this.state.user));
+                const userAsyncData = await AsyncStorage.setItem('user', 'true');
                 await this._syncUserDataAsync()
                 this.props.navigation.navigate('App')
             } else {
@@ -57,21 +54,42 @@ export default class LoginScreen extends Component {
     }
 
     _syncUserDataAsync = async () => {
-        await AsyncStorage.setItem('userName', this.state.user.displayName )
-        await AsyncStorage.setItem('uid', this.state.user.uid )
-        await AsyncStorage.setItem('userPicture', this.state.user.photoURL )
-        await AsyncStorage.setItem('userFirstName', this.state.user.firstName )
-        await AsyncStorage.setItem('userLastName', this.state.user.lastName )
-        await AsyncStorage.setItem('userEmail', this.state.user.email )
+        await AsyncStorage.multiSet([["uid", this.state.user["uid"]],
+        ["userName", this.state.user["displayName"]],
+        ["userFirstName", this.state.user["firstName"]],
+        ["userLastName", this.state.user["lastName"]],
+        ["userEmail", this.state.user["email"]],
+        ["userPhoto", JSON.stringify(this.state.user["photoURL"])]])
+        // await AsyncStorage.setItem('userName', this.state.user.displayName )
+        // await AsyncStorage.setItem('uid', this.state.user.uid )
+        // await AsyncStorage.setItem('userPicture', this.state.user.photoURL )
+        // await AsyncStorage.setItem('userFirstName', this.state.user.firstName )
+        // await AsyncStorage.setItem('userLastName', this.state.user.lastName )
+        // await AsyncStorage.setItem('userEmail', this.state.user.email )
+    }
+
+    logInComponents = () => {
+    
+        return (
+            <View style={styles.container}>            
+                <Text h2>Login</Text>
+                <Button onPress={this._signInAsync} title="Sign In With Google">{this.buttonTitle}</Button>
+            </View>
+        )
+    }
+
+    loginLoading = () => {
+        return (
+            <View style={styles.container}>
+                <ActivityIndicator/>
+            </View>
+        )
     }
 
     render() {
         const {user} = this.state;
         return (
-        <View style={styles.container}>
-            <Text h2>Login</Text>
-            <Button onPress={this._signInAsync} title="Sign In With Google">{this.buttonTitle}</Button>
-        </View>
+            this.state.isLoggingIn ? this.loginLoading() : this.logInComponents()
         )
     }
 
@@ -88,6 +106,7 @@ export default class LoginScreen extends Component {
 
     _signInAsync = async() => {
         try {
+            this.setState({isLoggingIn: true})
             await GoogleSignIn.askForPlayServicesAsync();
             const { type, user } = await GoogleSignIn.signInAsync();
             if (type === 'success') {

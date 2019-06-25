@@ -11,6 +11,8 @@ import {withNavigation} from 'react-navigation';
 class FeedHeader extends Component {
     constructor(props) {
         super(props);
+
+        this._openDrawer = this._openDrawer.bind(this)
     }
 
     _customInitialsHandler = (string) => {
@@ -24,7 +26,7 @@ class FeedHeader extends Component {
     }
 
     _openDrawer = () => {
-        this.props.navigation.openDrawer()
+        this.props.navigation.navigate("Logout")
     }
 
     render() {
@@ -43,7 +45,7 @@ class FeedHeader extends Component {
                     }} 
                     size={widthPercentageToDP('10%')} 
                     title={this.props.avatarName ? this._customInitialsHandler(this.props.avatarName) : "John Fraser"} 
-                    src={this.props.avatarSrc}/>
+                    source={{uri: this.props.avatarSrc}}/>
             </View>
         </View>
         );

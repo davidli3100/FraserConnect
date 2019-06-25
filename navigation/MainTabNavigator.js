@@ -1,7 +1,7 @@
 import React from 'react';
 import { createAppContainer, createBottomTabNavigator } from 'react-navigation';
 import { Feather } from "@expo/vector-icons";
-
+import {heightPercentageToDP} from '../constants/Normalize'
 import FeedScreen from '../screens/feed';
 import VotingScreen from "../screens/voting";
 import EventsScreen from "../screens/events"
@@ -50,7 +50,7 @@ export default createBottomTabNavigator(
           shadowRadius: 5.65,
           
           elevation: 7,
-          height: 65
+          height: heightPercentageToDP('7%')
         }
       }
     }
