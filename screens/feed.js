@@ -16,7 +16,7 @@ export default class FeedScreen extends Component {
 
     componentDidMount() {
       this._hydrateUserState()
-      console.log(this.state)
+      // console.log(this.state)
     }
 
     render() {
