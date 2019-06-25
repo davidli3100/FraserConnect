@@ -24,7 +24,7 @@ export default class FeedScreen extends Component {
     render() {
       return (
         <View style={styles.container}>
-          
+
             <FeedHeader avatarName={this.state.user["userName"]} avatarSrc={this.state.user["userPhoto"]}/>
         </View>
       );
@@ -99,8 +99,8 @@ export default class FeedScreen extends Component {
 
   const styles = StyleSheet.create({
     container: {
-      marginLeft: widthPercentageToDP('3%'),
-      marginRight: widthPercentageToDP('3%'),
-      marginTop: heightPercentageToDP('3.5%'),
+      marginLeft: widthPercentageToDP('4%'),
+      marginRight: widthPercentageToDP('4%'),
+      marginTop: heightPercentageToDP('5.5%'),
     },
 });

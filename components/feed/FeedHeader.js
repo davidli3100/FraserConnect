@@ -1,14 +1,30 @@
 //import liraries
 import React, { Component, Fragment } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Button } from 'react-native';
 import {default as Text} from '../Text';
-import UserAvatar from 'react-native-user-avatar';
 import {widthPercentageToDP, heightPercentageToDP} from '../../constants/Normalize'
-import * as theme from '../../constants/theme'
+import * as theme from '../../constants/theme';
+import { Avatar } from 'react-native-elements';
+import {withNavigation} from 'react-navigation';
+
 // create a component
 class FeedHeader extends Component {
     constructor(props) {
-        super(props)
+        super(props);
+    }
+
+    _customInitialsHandler = (string) => {
+        var names = string.split(' '),
+        initials = names[0].substring(0, 1).toUpperCase();
+    
+        if (names.length > 1) {
+            initials += names[1].substring(0, 1).toUpperCase();
+        }
+        return initials;    
+    }
+
+    _openDrawer = () => {
+        this.props.navigation.openDrawer()
     }
 
     render() {
@@ -19,7 +35,15 @@ class FeedHeader extends Component {
                 <Text style={styles.textLower}>Announcements</Text>
             </View>
             <View>
-                <UserAvatar size={widthPercentageToDP('10%')} name={this.props.avatarName ? this.props.avatarName : "John Doe"} src={this.props.avatarSrc}/>
+                <Avatar 
+                    overlayContainerStyle={{backgroundColor: '#47578f'}}
+                    rounded
+                    onPress={() => {
+                        this._openDrawer()
+                    }} 
+                    size={widthPercentageToDP('10%')} 
+                    title={this.props.avatarName ? this._customInitialsHandler(this.props.avatarName) : "John Fraser"} 
+                    src={this.props.avatarSrc}/>
             </View>
         </View>
         );
@@ -50,4 +74,4 @@ const styles = StyleSheet.create({
 });
 
 //make this component available to the app
-export default FeedHeader;
+export default withNavigation(FeedHeader);

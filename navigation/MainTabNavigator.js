@@ -14,6 +14,7 @@ export default createBottomTabNavigator(
     Voting: VotingScreen,
     },
     {
+      animationEnabled: true,
       initialRouteName: 'Home',
       defaultNavigationOptions: ({navigation}) => ({
         tabBarIcon: ({focused, horizontal, tintColor}) => {
