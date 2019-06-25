@@ -38,16 +38,31 @@ export default class LoginScreen extends Component {
     }
 
     _syncUserWithStateAsync = async () => {
-        if (await GoogleSignIn.signInSilentlyAsync()) {
-            const photoURL = await GoogleSignIn.getPhotoAsync(256);
-            const userData = await GoogleSignIn.getCurrentUserAsync();
-            if (userData) {
-                const userAsyncData = await AsyncStorage.setItem('user', JSON.stringify(userData));
+        const data = await GoogleSignIn.signInSilentlyAsync()
+            if(data) {
+                const photoURL = await GoogleSignIn.getPhotoAsync(256);
+                const userData = await GoogleSignIn.getCurrentUserAsync();
+                await this.setState({
+                    user: {
+                        ...userData.toJSON(),
+                        photoURL: photoURL || userData.photoURL,
+                    },
+                })
+                const userAsyncData = await AsyncStorage.setItem('user', JSON.stringify(this.state.user));
+                await this._syncUserDataAsync()
                 this.props.navigation.navigate('App')
+            } else {
+                this.setState({user: undefined})
             }
-        } else {
-            this.setState({user: undefined})
-        }
+    }
+
+    _syncUserDataAsync = async () => {
+        await AsyncStorage.setItem('userName', this.state.user.displayName )
+        await AsyncStorage.setItem('uid', this.state.user.uid )
+        await AsyncStorage.setItem('userPicture', this.state.user.photoURL )
+        await AsyncStorage.setItem('userFirstName', this.state.user.firstName )
+        await AsyncStorage.setItem('userLastName', this.state.user.lastName )
+        await AsyncStorage.setItem('userEmail', this.state.user.email )
     }
 
     render() {
@@ -76,11 +91,8 @@ export default class LoginScreen extends Component {
         try {
             await GoogleSignIn.askForPlayServicesAsync();
             const { type, user } = await GoogleSignIn.signInAsync();
-            // console.log(user)
-            // const userAsyncData = await AsyncStorage.setItem('user', JSON.stringify(user));
-            // console.log(await AsyncStorage.getItem('user'))
             if (type === 'success') {
-              this._syncUserWithStateAsync();
+              await this._syncUserWithStateAsync();
             //   this.props.navigation.navigate('App')
             }
           } catch ({ message }) {
