@@ -1,11 +1,11 @@
-import {createDrawerNavigator} from 'react-navigation';
-import logoutScreen from '../screens/logout';
+import { createDrawerNavigator } from "react-navigation";
+import logoutScreen from "../screens/logout";
 
 export default UserDrawerNavigator = createDrawerNavigator({
-    Logout: {
-        screen: logoutScreen,
-        navigationOptions: {
-            drawerLabel: 'Logout'
-        }
+  Logout: {
+    screen: logoutScreen,
+    navigationOptions: {
+      drawerLabel: "Logout"
     }
-})
+  }
+});
