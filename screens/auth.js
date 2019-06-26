@@ -78,12 +78,20 @@ export default class LoginScreen extends Component {
   logInComponents = () => {
     return (
       <View style={styles.container}>
-        <Text h2 style={{ padding: 15 }}>
-          Login
-        </Text>
-        <Button onPress={this._signInAsync} title="Sign In With Google">
-          {this.buttonTitle}
-        </Button>
+        <Text h2>Login</Text>
+        <View style={{ padding: 10 }}>
+          <Button
+            onPress={this._signInAsync}
+            title="Sign In With Google"
+            style={{ flex: 1 }}
+          >
+            {this.buttonTitle}
+          </Button>
+          <View style={{ flex: 0.1 }} />
+          <Button title="Admin Login" style={{ flex: 1 }}>
+            {this.buttonTitle}
+          </Button>
+        </View>
       </View>
     );
   };
