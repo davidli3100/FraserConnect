@@ -61,12 +61,6 @@ export default class LoginScreen extends Component {
         ["userLastName", this.state.user["lastName"]],
         ["userEmail", this.state.user["email"]],
         ["userPhoto", JSON.stringify(this.state.user["photoURL"])]])
-        // await AsyncStorage.setItem('userName', this.state.user.displayName )
-        // await AsyncStorage.setItem('uid', this.state.user.uid )
-        // await AsyncStorage.setItem('userPicture', this.state.user.photoURL )
-        // await AsyncStorage.setItem('userFirstName', this.state.user.firstName )
-        // await AsyncStorage.setItem('userLastName', this.state.user.lastName )
-        // await AsyncStorage.setItem('userEmail', this.state.user.email )
     }
 
     logInComponents = () => {
@@ -112,7 +106,6 @@ export default class LoginScreen extends Component {
             const { type, user } = await GoogleSignIn.signInAsync();
             if (type === 'success') {
               await this._syncUserWithStateAsync();
-            //   this.props.navigation.navigate('App')
             }
           } catch ({ message }) {
             console.error('login: Error:' + message);
