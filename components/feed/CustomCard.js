@@ -22,12 +22,12 @@ class CardHeader extends Component {
     return (
       <View style={styles.headerContainer}>
         <View style={styles.headerLeft}>
-          <Avatar 
+          {/* <Avatar 
               overlayContainerStyle={{backgroundColor: colors.blue}}
               rounded
               size={heightPercentageToDP('4%')} 
               title={this.props.poster ? this._customInitialsHandler(this.props.poster) : "John Fraser"} 
-              source={{uri: this.props.posterPhoto}}/>
+              source={{uri: this.props.posterPhoto}}/> */}
           <Text style={styles.headerPosterTitle}>{this.props.poster}</Text>
         </View>
         <View style={styles.headerRight}>
@@ -95,13 +95,13 @@ export default class FeedCard extends Component {
 }
 const styles = StyleSheet.create({
   container: {
-    shadowColor: "#000",
+    shadowColor: colors.shadow,
     shadowOffset: {
       width: 0,
-      height: 1,
+      height: 0,
     },
-    shadowOpacity: 0.1,
-    shadowRadius: 0.8,  
+    shadowOpacity: 1,
+    shadowRadius: 10,  
     elevation: 2,
     borderRadius: 13,
     backgroundColor: '#fff',
@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end'
   },
   headerPosterTitle: {
-    marginLeft : widthPercentageToDP('2.5%'),
+    // marginLeft : widthPercentageToDP('2.5%'),
     fontSize: heightPercentageToDP('2.55%'),
     fontFamily: 'Rubik-Bold',
   },
