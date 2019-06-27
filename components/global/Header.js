@@ -86,7 +86,7 @@ class Header extends Component {
     }
 
     _openDrawer = () => {
-        this.props.navigation.navigate("Logout")
+        this.props.navigation.navigate('DrawerOpen')
     }
 
     render() {
@@ -98,7 +98,7 @@ class Header extends Component {
             </View>
             <View>
                 <Avatar 
-                    overlayContainerStyle={{backgroundColor: '#47578f'}}
+                    overlayContainerStyle={{backgroundColor: theme.colors.blue}}
                     rounded
                     onPress={() => {
                         this._openDrawer()
@@ -115,12 +115,16 @@ class Header extends Component {
 // define your styles
 const styles = StyleSheet.create({
     container: {
+        paddingTop: heightPercentageToDP('2%'),
+        paddingBottom: heightPercentageToDP('2%'),
+        paddingLeft: widthPercentageToDP('4%'),
+        paddingRight: widthPercentageToDP('4%'),
         marginBottom: heightPercentageToDP('2%'),
         flex: -1,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        backgroundColor: '#ffffff',
+        // backgroundColor: '#ffffff',
     },
     containerLeft: {
         flexDirection: 'column'

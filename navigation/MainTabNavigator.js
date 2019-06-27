@@ -5,6 +5,7 @@ import {heightPercentageToDP} from '../constants/Normalize'
 import FeedScreen from '../screens/feed';
 import VotingScreen from "../screens/voting";
 import EventsScreen from "../screens/events"
+import { colors } from '../constants/theme';
 
 export default createBottomTabNavigator(
   
@@ -32,7 +33,7 @@ export default createBottomTabNavigator(
         }
       }),
       tabBarOptions: {
-        activeTintColor: '#47578f',
+        activeTintColor: colors.blue,
         inactiveTintColor: '#d4d4d4',
         showLabel: false,
         showIcon: true,

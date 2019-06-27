@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, ListRenderItemInfo, FlatList, Button, AsyncStorage } from 'react-native';
+import { StyleSheet, View, ListRenderItemInfo, FlatList, Platform, StatusBar, AsyncStorage } from 'react-native';
 import FeedCard from '../components/feed/CustomCard';
 import { default as Text } from '../components/Text'
 import * as GoogleSignIn from 'expo-google-sign-in';
@@ -21,10 +21,20 @@ export default class FeedScreen extends Component {
       // console.log(this.state)
     }
 
+    post = {
+      datePosted: 'June 24',
+      title: 'Hello World',
+      content: 'First ever text post on the Fraser Connect Prototype!',
+      poster: '3D Printing Club'
+    }
+
     render() {
       return (
         <View style={styles.container}>
             <Header screenName="Announcements"/>
+            <View style={styles.feedContainer}>
+              <FeedCard post={this.post}/>
+            </View>
         </View>
       );
     }
@@ -98,8 +108,12 @@ export default class FeedScreen extends Component {
 
   const styles = StyleSheet.create({
     container: {
-      marginLeft: widthPercentageToDP('4%'),
-      marginRight: widthPercentageToDP('4%'),
-      marginTop: heightPercentageToDP('5.5%'),
+      paddingTop: Platform.OS === 'ios' ? 0 : StatusBar.currentHeight,
+      height: heightPercentageToDP('100%'),
+      backgroundColor: 'rgba(254,254,254,1)',
     },
+    feedContainer: {
+      paddingLeft: widthPercentageToDP('4%'),
+      paddingRight: widthPercentageToDP('4%'),
+    }
 });

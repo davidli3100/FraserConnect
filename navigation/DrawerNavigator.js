@@ -1,11 +1,14 @@
-import {createDrawerNavigator} from 'react-navigation';
+import {createDrawerNavigator, DrawerNavigator, createAppContainer} from 'react-navigation';
 import logoutScreen from '../screens/logout';
+import MainTabNavigator from './MainTabNavigator';
 
-export default UserDrawerNavigator = createDrawerNavigator({
-    Logout: {
-        screen: logoutScreen,
-        navigationOptions: {
-            drawerLabel: 'Logout'
-        }
+const UserDrawerNavigator = createDrawerNavigator({
+        Logout: logoutScreen,
+        Tabs: MainTabNavigator
+    },
+    {
+        initialRouteName: 'Tabs'
     }
-})
+)
+
+export default createAppContainer(UserDrawerNavigator)

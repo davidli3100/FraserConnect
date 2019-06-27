@@ -24,6 +24,7 @@ export default class LoginScreen extends Component {
     _configureAsync = async () => {
         try {
             await GoogleSignIn.initAsync({
+                scopes: ["profile", "openid"],
                 isOfflineEnabled: false,
                 isPromptEnabled: true,
                 clientId: 'com.googleusercontent.apps.683024530611-kt7m86bgs5h9a54fcegdjmco6umbojs7'
