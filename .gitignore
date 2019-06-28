@@ -6,7 +6,9 @@ npm-debug.*
 *.key
 *.mobileprovision
 *.orig.*
+*.plist
 web-build/
 web-report/
 .env
 assets/evaicons
+google-services.json

@@ -26,8 +26,8 @@ export default class LoginScreen extends Component {
             await GoogleSignIn.initAsync({
                 scopes: ["profile", "openid"],
                 isOfflineEnabled: false,
-                isPromptEnabled: true,
-                clientId: 'com.googleusercontent.apps.683024530611-kt7m86bgs5h9a54fcegdjmco6umbojs7'
+                isPromptEnabled: false,
+                clientId: 'com.googleusercontent.apps.855800292598-okhc8gk405slk750gukupgf12u82o5qi'
             });
         } catch ({error}) {
             console.error('Error: ' + error);
@@ -48,6 +48,7 @@ export default class LoginScreen extends Component {
                     },
                 })
                 const userAsyncData = await AsyncStorage.setItem('user', 'true');
+                // console.log(userData)
                 await this._syncUserDataAsync()
                 this.props.navigation.navigate('App')
             } else {
@@ -106,6 +107,7 @@ export default class LoginScreen extends Component {
             await GoogleSignIn.askForPlayServicesAsync();
             const { type, user } = await GoogleSignIn.signInAsync();
             if (type === 'success') {
+              console.log(user)
               await this._syncUserWithStateAsync();
             }
           } catch ({ message }) {

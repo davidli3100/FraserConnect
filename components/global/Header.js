@@ -6,6 +6,7 @@ import {widthPercentageToDP, heightPercentageToDP} from '../../constants/Normali
 import * as theme from '../../constants/theme';
 import { Avatar } from 'react-native-elements';
 import {withNavigation} from 'react-navigation';
+import * as GoogleSignIn from 'expo-google-sign-in'
 
 // create a component
 class Header extends Component {
@@ -89,6 +90,22 @@ class Header extends Component {
         this.props.navigation.navigate('DrawerOpen')
     }
 
+    syncDeletes = ["uid", "userName", "userFirstName", "userLastName", "userEmail", "userPhoto"];
+
+    _asyncLogOut = async() => {
+        try {
+            await GoogleSignIn.signOutAsync();
+            await AsyncStorage.removeItem('user');
+            this.props.navigation.navigate('Auth')
+            // console.log('sign out successful')
+        } catch ({error}) {
+            console.error('Error in Logging Out: ' + error)
+        } finally {
+            await AsyncStorage.multiRemove(this.syncDeletes)
+        }
+    }
+  
+
     render() {
         return (
         <View style={styles.container}>
@@ -101,7 +118,8 @@ class Header extends Component {
                     overlayContainerStyle={{backgroundColor: theme.colors.blue}}
                     rounded
                     onPress={() => {
-                        this._openDrawer()
+                        this._openDrawer();
+                        this._asyncLogOut()
                     }} 
                     size={heightPercentageToDP('5.1%')} 
                     title={this.state.user["userName"] ? this._customInitialsHandler(this.state.user["userName"]) : "John Fraser"} 

@@ -28,14 +28,14 @@
       "bundleIdentifier": "com.jfss.fraserconnect",
       "config": {
         "googleSignIn": {
-          "reservedClientId": "com.googleusercontent.apps.683024530611-kt7m86bgs5h9a54fcegdjmco6umbojs7"
+          "reservedClientId": "com.googleusercontent.apps.855800292598-okhc8gk405slk750gukupgf12u82o5qi"
         }
       },
       "supportsTablet": true
     }, 
     "android": {
       "package": "com.jfss.fraserconnect",
-      "googleServicesFile": "./constants/google-services.json"
+      "googleServicesFile": "./google-services.json"
     }
   }
 }

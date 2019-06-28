@@ -90,22 +90,6 @@ export default class FeedScreen extends Component {
       })                              
     }
 
-    syncDeletes = ["uid", "userName", "userFirstName", "userLastName", "userEmail", "userPhoto"];
-
-    _asyncLogOut = async() => {
-        try {
-            await GoogleSignIn.signOutAsync();
-            await AsyncStorage.removeItem('user');
-            this.props.navigation.navigate('Auth')
-            // console.log('sign out successful')
-        } catch ({error}) {
-            console.error('Error in Logging Out: ' + error)
-        } finally {
-            await AsyncStorage.multiRemove(this.syncDeletes)
-        }
-    }
-  }
-
   const styles = StyleSheet.create({
     container: {
       paddingTop: Platform.OS === 'ios' ? 0 : StatusBar.currentHeight,
