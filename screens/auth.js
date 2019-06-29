@@ -21,12 +21,6 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-firebase.auth().onAuthStateChanged((user) => {
-    if (user != null) {
-        //authenticated
-    }
-})
-
 export default class LoginScreen extends Component {
 
     constructor(props) {
