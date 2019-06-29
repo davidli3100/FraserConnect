@@ -2,10 +2,30 @@ import React, { Component } from 'react';
 import {StyleSheet, View, Button, AsyncStorage, ActivityIndicator} from 'react-native';
 import {default as Text} from '../components/Text';
 import * as GoogleSignIn from 'expo-google-sign-in';
-import { Google } from 'expo';
+import * as firebase from 'firebase';
+import {apiKey, appId, messagingSenderId, storageBucket, authDomain, databaseURL, projectId} from '../constants/firebaseConfig'
+
+
 
 GoogleSignIn.allowInClient();
 
+const firebaseConfig = {
+    apiKey: apiKey,
+    authDomain: authDomain,
+    databaseURL: databaseURL,
+    storageBucket: storageBucket,
+    appId: appId,
+    messagingSenderId: messagingSenderId,
+    projectId: projectId
+}
+
+firebase.initializeApp(firebaseConfig);
+
+firebase.auth().onAuthStateChanged((user) => {
+    if (user != null) {
+        //authenticated
+    }
+})
 
 export default class LoginScreen extends Component {
 
@@ -27,7 +47,7 @@ export default class LoginScreen extends Component {
                 scopes: ["profile", "openid"],
                 isOfflineEnabled: false,
                 isPromptEnabled: false,
-                clientId: 'com.googleusercontent.apps.855800292598-okhc8gk405slk750gukupgf12u82o5qi'
+                clientId: 'com.googleusercontent.apps.855800292598-okhc8gk405slk750gukupgf12u82o5qi',
             });
         } catch ({error}) {
             console.error('Error: ' + error);
@@ -107,7 +127,14 @@ export default class LoginScreen extends Component {
             await GoogleSignIn.askForPlayServicesAsync();
             const { type, user } = await GoogleSignIn.signInAsync();
             if (type === 'success') {
-              console.log(user)
+              console.log(user.auth)
+                //build firebase auth
+                credential = firebase.auth.GoogleAuthProvider.credential(user.auth["idToken"], user.auth['accessToken'])
+                //build user
+                firebase.auth().signInWithCredential(credential).then(user => {
+                    console.log(user)
+                }).catch(error => {console.log(error)})
+    
               await this._syncUserWithStateAsync();
             }
           } catch ({ message }) {

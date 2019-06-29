@@ -4,7 +4,7 @@ import FeedCard from '../components/feed/CustomCard';
 import { default as Text } from '../components/Text'
 import * as GoogleSignIn from 'expo-google-sign-in';
 import Header from '../components/global/Header';
-import {widthPercentageToDP, heightPercentageToDP} from '../constants/Normalize'
+import {widthPercentageToDP, heightPercentageToDP} from '../constants/Normalize';
 
 export default class FeedScreen extends Component {
     constructor(props) {
@@ -14,19 +14,18 @@ export default class FeedScreen extends Component {
 
         }
       };
-    }
+    };
 
     componentDidMount() {
       this._hydrateUserState()
-      // console.log(this.state)
-    }
+    };
 
     post = {
       datePosted: 'June 24',
       title: 'Hello World',
       content: 'First ever text post on the Fraser Connect Prototype!',
       poster: '3D Printing Club'
-    }
+    };
 
     render() {
       return (
@@ -37,7 +36,7 @@ export default class FeedScreen extends Component {
             </View>
         </View>
       );
-    }
+    };
 
     _hydrateUserState = async () => {
       AsyncStorage.getItem('userName').then((res) => {
@@ -88,7 +87,9 @@ export default class FeedScreen extends Component {
           }
         }))
       })                              
-    }
+    };
+
+  }
 
   const styles = StyleSheet.create({
     container: {
