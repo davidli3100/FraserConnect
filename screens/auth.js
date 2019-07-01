@@ -8,9 +8,30 @@ import {
 } from "react-native";
 import { default as Text } from "../components/Text";
 import * as GoogleSignIn from "expo-google-sign-in";
-import { Google } from "expo";
+import * as firebase from "firebase";
+import {
+  apiKey,
+  appId,
+  messagingSenderId,
+  storageBucket,
+  authDomain,
+  databaseURL,
+  projectId
+} from "../constants/firebaseConfig";
 
 GoogleSignIn.allowInClient();
+
+const firebaseConfig = {
+  apiKey: apiKey,
+  authDomain: authDomain,
+  databaseURL: databaseURL,
+  storageBucket: storageBucket,
+  appId: appId,
+  messagingSenderId: messagingSenderId,
+  projectId: projectId
+};
+
+firebase.initializeApp(firebaseConfig);
 
 export default class LoginScreen extends Component {
   constructor(props) {
@@ -27,10 +48,11 @@ export default class LoginScreen extends Component {
   _configureAsync = async () => {
     try {
       await GoogleSignIn.initAsync({
+        scopes: ["profile", "openid"],
         isOfflineEnabled: false,
-        isPromptEnabled: true,
+        isPromptEnabled: false,
         clientId:
-          "com.googleusercontent.apps.683024530611-kt7m86bgs5h9a54fcegdjmco6umbojs7"
+          "com.googleusercontent.apps.855800292598-okhc8gk405slk750gukupgf12u82o5qi"
       });
     } catch ({ error }) {
       console.error("Error: " + error);
@@ -51,6 +73,7 @@ export default class LoginScreen extends Component {
         }
       });
       const userAsyncData = await AsyncStorage.setItem("user", "true");
+      // console.log(userData)
       await this._syncUserDataAsync();
       this.props.navigation.navigate("App");
     } else {
@@ -67,20 +90,12 @@ export default class LoginScreen extends Component {
       ["userEmail", this.state.user["email"]],
       ["userPhoto", JSON.stringify(this.state.user["photoURL"])]
     ]);
-    // await AsyncStorage.setItem('userName', this.state.user.displayName )
-    // await AsyncStorage.setItem('uid', this.state.user.uid )
-    // await AsyncStorage.setItem('userPicture', this.state.user.photoURL )
-    // await AsyncStorage.setItem('userFirstName', this.state.user.firstName )
-    // await AsyncStorage.setItem('userLastName', this.state.user.lastName )
-    // await AsyncStorage.setItem('userEmail', this.state.user.email )
   };
 
   logInComponents = () => {
     return (
       <View style={styles.container}>
-        <Text h2 style={{ padding: 15 }}>
-          Login
-        </Text>
+        <Text h2>Login</Text>
         <Button onPress={this._signInAsync} title="Sign In With Google">
           {this.buttonTitle}
         </Button>
@@ -120,8 +135,24 @@ export default class LoginScreen extends Component {
       await GoogleSignIn.askForPlayServicesAsync();
       const { type, user } = await GoogleSignIn.signInAsync();
       if (type === "success") {
+        console.log(user.auth);
+        //build firebase auth
+        credential = firebase.auth.GoogleAuthProvider.credential(
+          user.auth["idToken"],
+          user.auth["accessToken"]
+        );
+        //build user
+        firebase
+          .auth()
+          .signInWithCredential(credential)
+          .then(user => {
+            console.log(user);
+          })
+          .catch(error => {
+            console.log(error);
+          });
+
         await this._syncUserWithStateAsync();
-        //   this.props.navigation.navigate('App')
       }
     } catch ({ message }) {
       console.error("login: Error:" + message);

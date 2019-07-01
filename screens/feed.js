@@ -4,7 +4,8 @@ import {
   View,
   ListRenderItemInfo,
   FlatList,
-  Button,
+  Platform,
+  StatusBar,
   AsyncStorage
 } from "react-native";
 import FeedCard from "../components/feed/CustomCard";
@@ -26,13 +27,22 @@ export default class FeedScreen extends Component {
 
   componentDidMount() {
     this._hydrateUserState();
-    // console.log(this.state)
   }
+
+  post = {
+    datePosted: "June 24",
+    title: "Hello World",
+    content: "First ever text post on the Fraser Connect Prototype!",
+    poster: "3D Printing Club"
+  };
 
   render() {
     return (
       <View style={styles.container}>
         <Header screenName="Announcements" />
+        <View style={styles.feedContainer}>
+          <FeedCard post={this.post} />
+        </View>
       </View>
     );
   }
@@ -87,34 +97,16 @@ export default class FeedScreen extends Component {
       }));
     });
   };
-
-  syncDeletes = [
-    "uid",
-    "userName",
-    "userFirstName",
-    "userLastName",
-    "userEmail",
-    "userPhoto"
-  ];
-
-  _asyncLogOut = async () => {
-    try {
-      await GoogleSignIn.signOutAsync();
-      await AsyncStorage.removeItem("user");
-      this.props.navigation.navigate("Auth");
-      // console.log('sign out successful')
-    } catch ({ error }) {
-      console.error("Error in Logging Out: " + error);
-    } finally {
-      await AsyncStorage.multiRemove(this.syncDeletes);
-    }
-  };
 }
 
 const styles = StyleSheet.create({
   container: {
-    marginLeft: widthPercentageToDP("4%"),
-    marginRight: widthPercentageToDP("4%"),
-    marginTop: heightPercentageToDP("5.5%")
+    paddingTop: Platform.OS === "ios" ? 0 : StatusBar.currentHeight,
+    height: heightPercentageToDP("100%"),
+    backgroundColor: "rgba(254,254,254,1)"
+  },
+  feedContainer: {
+    paddingLeft: widthPercentageToDP("4%"),
+    paddingRight: widthPercentageToDP("4%")
   }
 });

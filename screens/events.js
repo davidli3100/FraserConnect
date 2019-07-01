@@ -1,6 +1,6 @@
 //import liraries
 import React, { Component } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Platform, StatusBar } from "react-native";
 import { default as Text } from "../components/Text";
 import Header from "../components/global/Header";
 import {
@@ -23,9 +23,9 @@ class Events extends Component {
 // define your styles
 const styles = StyleSheet.create({
   container: {
-    marginLeft: widthPercentageToDP("4%"),
-    marginRight: widthPercentageToDP("4%"),
-    marginTop: heightPercentageToDP("5.5%")
+    paddingTop: Platform.OS === "ios" ? 0 : StatusBar.currentHeight
+    //   marginLeft: widthPercentageToDP('4%'),
+    //   marginRight: widthPercentageToDP('4%'),
   }
 });
 

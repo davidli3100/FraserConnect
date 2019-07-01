@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Platform, StatusBar } from "react-native";
 import { default as Text } from "../components/Text";
 import {
   widthPercentageToDP,
@@ -20,8 +20,8 @@ export default class VotingScreen extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    marginLeft: widthPercentageToDP("4%"),
-    marginRight: widthPercentageToDP("4%"),
-    marginTop: heightPercentageToDP("5.5%")
+    paddingTop: Platform.OS === "ios" ? 0 : StatusBar.currentHeight
+    // marginLeft: widthPercentageToDP('4%'),
+    // marginRight: widthPercentageToDP('4%'),
   }
 });
