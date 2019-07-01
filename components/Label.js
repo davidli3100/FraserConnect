@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
-import { StyleSheet, View } from 'react-native'
+import React, { Component } from "react";
+import { StyleSheet, View } from "react-native";
 
-import * as theme from '../constants/theme';
+import * as theme from "../constants/theme";
 
 export default class Label extends Component {
   render() {
@@ -33,14 +33,14 @@ export default class Label extends Component {
       black && { backgroundColor: theme.colors.black },
       white && { backgroundColor: theme.colors.white },
       gray && { backgroundColor: theme.colors.gray },
-      style,
+      style
     ];
 
     return (
       <View style={labelStyles} {...props}>
         {children}
       </View>
-    )
+    );
   }
 }
 
@@ -49,6 +49,6 @@ const styles = StyleSheet.create({
     margin: 4,
     width: 12,
     height: 12,
-    borderRadius: 12,
-  },
+    borderRadius: 12
+  }
 });
