@@ -1,5 +1,4 @@
 //import liraries
-<<<<<<< Updated upstream
 import React, { Component, Fragment } from "react";
 import { View, StyleSheet, AsyncStorage } from "react-native";
 import { default as Text } from "../Text";
@@ -11,17 +10,6 @@ import * as theme from "../../constants/theme";
 import { Avatar } from "react-native-elements";
 import { withNavigation } from "react-navigation";
 import * as GoogleSignIn from "expo-google-sign-in";
-=======
-import React, { Component, Fragment } from 'react';
-import { View, StyleSheet, AsyncStorage } from 'react-native';
-import {default as Text} from '../Text';
-import {widthPercentageToDP, heightPercentageToDP} from '../../constants/Normalize'
-import * as theme from '../../constants/theme';
-import { Avatar } from 'react-native-elements';
-import {withNavigation} from 'react-navigation';
-import * as GoogleSignIn from 'expo-google-sign-in'
-import * as firebase from 'firebase'
->>>>>>> Stashed changes
 
 // create a component
 class Header extends Component {
@@ -112,18 +100,6 @@ class Header extends Component {
     "userPhoto"
   ];
 
-<<<<<<< Updated upstream
-  _asyncLogOut = async () => {
-    try {
-      await GoogleSignIn.signOutAsync();
-      await AsyncStorage.removeItem("user");
-      this.props.navigation.navigate("Auth");
-      // console.log('sign out successful')
-    } catch ({ error }) {
-      console.error("Error in Logging Out: " + error);
-    } finally {
-      await AsyncStorage.multiRemove(this.syncDeletes);
-=======
     _asyncLogOut = async() => {
         try {
             await GoogleSignIn.signOutAsync();
@@ -136,9 +112,7 @@ class Header extends Component {
         } finally {
             await AsyncStorage.multiRemove(this.syncDeletes)
         }
->>>>>>> Stashed changes
     }
-  };
 
   render() {
     return (
@@ -171,7 +145,6 @@ class Header extends Component {
 
 // define your styles
 const styles = StyleSheet.create({
-<<<<<<< Updated upstream
   container: {
     paddingTop: heightPercentageToDP("2%"),
     paddingBottom: heightPercentageToDP("2%"),
@@ -196,32 +169,6 @@ const styles = StyleSheet.create({
     color: theme.colors.gray,
     fontSize: heightPercentageToDP("1.5%")
   }
-=======
-    container: {
-        paddingTop: heightPercentageToDP('2%'),
-        paddingBottom: heightPercentageToDP('2%'),
-        paddingLeft: widthPercentageToDP('4%'),
-        paddingRight: widthPercentageToDP('4%'),
-        marginBottom: heightPercentageToDP('1%'),
-        flex: -1,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        // backgroundColor: '#ffffff',
-    },
-    containerLeft: {
-        flexDirection: 'column'
-    },
-    textLower: {
-        fontFamily: 'Rubik-Bold',
-        fontSize: heightPercentageToDP('2.8%'),
-        paddingTop: heightPercentageToDP('0.3%')
-    },
-    textUpper: {
-        color: theme.colors.gray,
-        fontSize: heightPercentageToDP('1.5%')
-    }
->>>>>>> Stashed changes
 });
 
 //make this component available to the app
