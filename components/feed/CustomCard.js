@@ -111,11 +111,22 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     elevation: 2,
     borderRadius: 13,
+<<<<<<< Updated upstream
     backgroundColor: "#fff",
     paddingTop: heightPercentageToDP("2%"),
     paddingBottom: heightPercentageToDP("2%"),
     paddingRight: widthPercentageToDP("3%"),
     paddingLeft: widthPercentageToDP("3%")
+=======
+    backgroundColor: '#fff',
+    paddingTop: heightPercentageToDP('2%'),
+    paddingBottom: heightPercentageToDP('2%'),
+    paddingRight: widthPercentageToDP('3%'),
+    paddingLeft: widthPercentageToDP('3%'),
+    marginBottom: heightPercentageToDP('2.5%'),
+    marginLeft: widthPercentageToDP('4%'),
+    marginRight: widthPercentageToDP('4%')
+>>>>>>> Stashed changes
   },
   headerContainer: {
     flex: -1,
@@ -155,8 +166,13 @@ const styles = StyleSheet.create({
   },
   headerPosterTitle: {
     // marginLeft : widthPercentageToDP('2.5%'),
+<<<<<<< Updated upstream
     fontSize: heightPercentageToDP("2.55%"),
     fontFamily: "Rubik-Bold"
+=======
+    fontSize: heightPercentageToDP('2.35%'),
+    fontFamily: 'Rubik-Bold',
+>>>>>>> Stashed changes
   },
   contentTitle: {
     fontSize: heightPercentageToDP("2.3%"),

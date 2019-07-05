@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import React, { Component } from "react";
 import {
   StyleSheet,
@@ -16,6 +17,16 @@ import {
   widthPercentageToDP,
   heightPercentageToDP
 } from "../constants/Normalize";
+=======
+import React, { Component } from 'react';
+import { StyleSheet, View, Platform, StatusBar, AsyncStorage } from 'react-native';
+import FeedCard from '../components/feed/CustomCard';
+import { default as Text } from '../components/Text'
+import * as GoogleSignIn from 'expo-google-sign-in';
+import {FlatList, SafeAreaView} from 'react-navigation'
+import Header from '../components/global/Header';
+import {widthPercentageToDP, heightPercentageToDP} from '../constants/Normalize';
+>>>>>>> Stashed changes
 
 export default class FeedScreen extends Component {
   constructor(props) {
@@ -29,6 +40,7 @@ export default class FeedScreen extends Component {
     this._hydrateUserState();
   }
 
+<<<<<<< Updated upstream
   post = {
     datePosted: "June 24",
     title: "Hello World",
@@ -46,6 +58,65 @@ export default class FeedScreen extends Component {
       </View>
     );
   }
+=======
+    posts = [
+      {
+      datePosted: 'June 24',
+      title: 'Hello World',
+      content: 'First ever text post on the Fraser Connect Prototype!',
+      poster: '3D Printing Club'
+      },
+      {
+        datePosted: 'June 24',
+        title: 'Hello World',
+        content: 'First ever text post on the Fraser Connect Prototype!',
+        poster: '3D Printing Club'
+      },
+      {
+        datePosted: 'June 24',
+        title: 'Hello World',
+        content: 'First ever text post on the Fraser Connect Prototype!',
+        poster: '3D Printing Club'
+      },
+      {
+        datePosted: 'June 24',
+        title: 'Hello World',
+        content: 'First ever text post on the Fraser Connect Prototype!',
+        poster: '3D Printing Club'
+      },
+      {
+        datePosted: 'June 24',
+        title: 'Hello World',
+        content: 'First ever text post on the Fraser Connect Prototype!',
+        poster: '3D Printing Club'
+      }
+  ];
+
+    renderFeedCard = (props) => {
+      return (
+        <FeedCard post={props.item}/>
+      )
+    }
+
+    render() {
+      return (
+      <SafeAreaView forceInset={{ bottom: 'never' }}>
+        <View style={styles.container}>
+            <Header screenName="Announcements"/>
+            <View style={styles.flatListContainer}>
+              <FlatList
+                style={styles.flatList}
+                removeClippedSubviews
+                data={this.posts}
+                renderItem={this.renderFeedCard}
+                keyExtractor={(item, index) => item.poster + item.datePosted + item.title}
+              />
+            </View>
+        </View>
+      </SafeAreaView>
+      );
+    };
+>>>>>>> Stashed changes
 
   _hydrateUserState = async () => {
     AsyncStorage.getItem("userName").then(res => {
@@ -109,4 +180,22 @@ const styles = StyleSheet.create({
     paddingLeft: widthPercentageToDP("4%"),
     paddingRight: widthPercentageToDP("4%")
   }
+<<<<<<< Updated upstream
 });
+=======
+
+  const styles = StyleSheet.create({
+    container: {
+      paddingTop: Platform.OS === 'ios' ? 0 : StatusBar.currentHeight,
+      height: heightPercentageToDP('100%'),
+      backgroundColor: 'rgba(254,254,254,1)',
+    },
+    flatListContainer: {
+      width: widthPercentageToDP('100%'),
+      flex: 1
+    },
+    flatList: {
+      marginBottom: heightPercentageToDP('5%')
+    }
+});
+>>>>>>> Stashed changes
