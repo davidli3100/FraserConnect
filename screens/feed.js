@@ -1,11 +1,36 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Platform, StatusBar, AsyncStorage } from 'react-native';
 import FeedCard from '../components/feed/CustomCard';
-import { default as Text } from '../components/Text'
-import * as GoogleSignIn from 'expo-google-sign-in';
 import {FlatList, SafeAreaView} from 'react-navigation'
 import Header from '../components/global/Header';
 import {widthPercentageToDP, heightPercentageToDP} from '../constants/Normalize';
+import * as firebase from 'firebase'
+import 'firebase/firestore'
+import {
+  apiKey,
+  appId,
+  messagingSenderId,
+  storageBucket,
+  authDomain,
+  databaseURL,
+  projectId
+} from "../constants/firebaseConfig";
+
+const firebaseConfig = {
+  apiKey: apiKey,
+  authDomain: authDomain,
+  databaseURL: databaseURL,
+  storageBucket: storageBucket,
+  appId: appId,
+  messagingSenderId: messagingSenderId,
+  projectId: projectId
+};
+
+if(!firebase.apps.length){
+  firebase.initializeApp(firebaseConfig);
+  var db = firebase.firestore();
+}
+var announcementsRef = db.collection("announcements");
 
 export default class FeedScreen extends Component {
   constructor(props) {
@@ -17,40 +42,9 @@ export default class FeedScreen extends Component {
 
   componentDidMount() {
     this._hydrateUserState();
+    this._hydrateInitialFeed();
   }
 
-    posts = [
-      {
-      datePosted: 'June 24',
-      title: 'Hello World',
-      content: 'First ever text post on the Fraser Connect Prototype!',
-      poster: '3D Printing Club'
-      },
-      {
-        datePosted: 'June 24',
-        title: 'Hello World',
-        content: 'First ever text post on the Fraser Connect Prototype!',
-        poster: '3D Printing Club'
-      },
-      {
-        datePosted: 'June 24',
-        title: 'Hello World',
-        content: 'First ever text post on the Fraser Connect Prototype!',
-        poster: '3D Printing Club'
-      },
-      {
-        datePosted: 'June 24',
-        title: 'Hello World',
-        content: 'First ever text post on the Fraser Connect Prototype!',
-        poster: '3D Printing Club'
-      },
-      {
-        datePosted: 'June 24',
-        title: 'Hello World',
-        content: 'First ever text post on the Fraser Connect Prototype!',
-        poster: '3D Printing Club'
-      }
-  ];
 
     renderFeedCard = (props) => {
       return (
@@ -67,9 +61,9 @@ export default class FeedScreen extends Component {
               <FlatList
                 style={styles.flatList}
                 removeClippedSubviews
-                data={this.posts}
+                data={this.state.announcements}
                 renderItem={this.renderFeedCard}
-                keyExtractor={(item, index) => item.poster + item.datePosted + item.title}
+                keyExtractor={(item, index) => item.title + item.poster + new Date().setTime(item.datePosted.seconds*1000).toString()}
               />
             </View>
         </View>
@@ -127,6 +121,14 @@ export default class FeedScreen extends Component {
       }));
     });
   };
+
+  _hydrateInitialFeed = async () => {
+    //get the first 10 announcements in the feed (desc order)
+    data = await announcementsRef.orderBy("datePosted", "desc").limit(10).get()
+    this.setState({
+      announcements: data.docs.map(doc => doc.data())
+    })
+  }
 }
 
   const styles = StyleSheet.create({
@@ -140,6 +142,7 @@ export default class FeedScreen extends Component {
       flex: 1
     },
     flatList: {
+      marginTop: heightPercentageToDP('2%'),
       marginBottom: heightPercentageToDP('5%')
     }
 });

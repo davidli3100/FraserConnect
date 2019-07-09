@@ -7,14 +7,9 @@ import VotingScreen from "../screens/voting";
 import EventsScreen from "../screens/events";
 import { colors } from "../constants/theme";
 
-<<<<<<< Updated upstream
-export default createBottomTabNavigator(
-  {
-=======
-export default MainTabNavigator = createBottomTabNavigator(
+export default Tabs = createBottomTabNavigator(
   
     {
->>>>>>> Stashed changes
     Home: FeedScreen,
     Events: EventsScreen,
     Voting: VotingScreen

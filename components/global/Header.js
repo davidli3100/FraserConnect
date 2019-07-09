@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
     paddingBottom: heightPercentageToDP("2%"),
     paddingLeft: widthPercentageToDP("4%"),
     paddingRight: widthPercentageToDP("4%"),
-    marginBottom: heightPercentageToDP("2%"),
+    // marginBottom: heightPercentageToDP("2%"),
     flex: -1,
     flexDirection: "row",
     justifyContent: "space-between",
