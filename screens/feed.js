@@ -31,12 +31,15 @@ if(!firebase.apps.length){
   var db = firebase.firestore();
 }
 var announcementsRef = db.collection("announcements");
+var statisticsRef = db.collection("statistics");
 
 export default class FeedScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: {}
+      user: {},
+      refreshing: false,
+      extraData: false,
     };
   }
 
@@ -59,6 +62,9 @@ export default class FeedScreen extends Component {
             <Header screenName="Announcements"/>
             <View style={styles.flatListContainer}>
               <FlatList
+                onRefresh={() => {this._refreshFeed()}}
+                extraData={this.state.extraData}
+                refreshing={this.state.refreshing}
                 style={styles.flatList}
                 removeClippedSubviews
                 data={this.state.announcements}
@@ -120,14 +126,33 @@ export default class FeedScreen extends Component {
         }
       }));
     });
+    return true
   };
 
   _hydrateInitialFeed = async () => {
     //get the first 10 announcements in the feed (desc order)
-    data = await announcementsRef.orderBy("datePosted", "desc").limit(10).get()
+    data = await announcementsRef.orderBy("datePosted", "desc").limit(8).get()
     this.setState({
-      announcements: data.docs.map(doc => doc.data())
+      announcements: data.docs.map(doc => doc.data()),
     })
+    return true
+  }
+
+  _refreshFeed = async () => {
+    this.setState({refreshing: true})
+    temp = await this._getNumPosts()
+    console.log(temp)
+    data = await announcementsRef.orderBy("datePosted", "desc").limit(8).get()
+    this.setState({
+      announcements: data.docs.map(doc => doc.data()),
+      refreshing: false
+    })
+    return true
+  }
+
+  _getNumPosts = async () => {
+    data = await statisticsRef.doc("feed").get()
+    return data.data().numPosts
   }
 }
 
@@ -143,6 +168,6 @@ export default class FeedScreen extends Component {
     },
     flatList: {
       marginTop: heightPercentageToDP('2%'),
-      marginBottom: heightPercentageToDP('5%')
+      marginBottom: heightPercentageToDP('6%')
     }
 });
