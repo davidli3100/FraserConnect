@@ -63,6 +63,8 @@ export default class FeedScreen extends Component {
             <View style={styles.flatListContainer}>
               <FlatList
                 onRefresh={() => {this._refreshFeed()}}
+                onEndReached={() => {this._getInfinityScrollFeed()}}
+                onEndReachedThreshold={0.2}
                 extraData={this.state.extraData}
                 refreshing={this.state.refreshing}
                 style={styles.flatList}
@@ -140,20 +142,42 @@ export default class FeedScreen extends Component {
 
   _refreshFeed = async () => {
     this.setState({refreshing: true})
-    temp = await this._getNumPosts()
-    console.log(temp)
-    data = await announcementsRef.orderBy("datePosted", "desc").limit(8).get()
-    this.setState({
-      announcements: data.docs.map(doc => doc.data()),
-      refreshing: false
-    })
-    return true
+    numPosts = await this._getNumPosts()
+    if(this.state.announcements.length === numPosts || this.state.announcements.length > numPosts) {
+      this.setState({
+        refreshing: false
+      })
+      return true
+    } 
+    else if (this.state.announcements.length < numPosts) {
+      data = await announcementsRef.orderBy("datePosted", "desc").limit(8).get()
+      this.setState({
+        announcements: data.docs.map(doc => doc.data()),
+        refreshing: false,
+        extraData: true
+      })
+      return true
+    }
   }
 
   _getNumPosts = async () => {
     data = await statisticsRef.doc("feed").get()
     return data.data().numPosts
   }
+
+
+  _getInfinityScrollFeed = async () => {
+      announcementsRef.orderBy("datePosted", "desc").startAfter(this.state.announcements[this.state.announcements.length-1].datePosted).limit(5).get().then((data) => {
+        parsedData = data.docs.map(doc => doc.data())
+        this.setState(previousState => ({
+          // let concatted = previousState.announcements.concat(parsedData)
+          // console.log(concatted)
+          announcements: [...previousState.announcements, ...parsedData]
+        }));
+        // console.log(this.state)   
+      })
+ 
+    }
 }
 
   const styles = StyleSheet.create({
