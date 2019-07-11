@@ -64,7 +64,7 @@ export default class FeedScreen extends Component {
               <FlatList
                 onRefresh={() => {this._refreshFeed()}}
                 onEndReached={() => {this._getInfinityScrollFeed()}}
-                onEndReachedThreshold={0.2}
+                onEndReachedThreshold={0.35}
                 extraData={this.state.extraData}
                 refreshing={this.state.refreshing}
                 style={styles.flatList}
@@ -170,13 +170,9 @@ export default class FeedScreen extends Component {
       announcementsRef.orderBy("datePosted", "desc").startAfter(this.state.announcements[this.state.announcements.length-1].datePosted).limit(5).get().then((data) => {
         parsedData = data.docs.map(doc => doc.data())
         this.setState(previousState => ({
-          // let concatted = previousState.announcements.concat(parsedData)
-          // console.log(concatted)
-          announcements: [...previousState.announcements, ...parsedData]
+          announcements: [...previousState.announcements, ...parsedData],
         }));
-        // console.log(this.state)   
       })
- 
     }
 }
 
