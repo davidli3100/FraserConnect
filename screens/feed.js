@@ -64,7 +64,7 @@ export default class FeedScreen extends Component {
               <FlatList
                 onRefresh={() => {this._refreshFeed()}}
                 onEndReached={() => {this._getInfinityScrollFeed()}}
-                onEndReachedThreshold={0.35}
+                onEndReachedThreshold={0.45}
                 extraData={this.state.extraData}
                 refreshing={this.state.refreshing}
                 style={styles.flatList}
@@ -187,7 +187,6 @@ export default class FeedScreen extends Component {
       flex: 1
     },
     flatList: {
-      marginTop: heightPercentageToDP('2%'),
       marginBottom: heightPercentageToDP('6%')
     }
 });
