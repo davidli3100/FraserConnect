@@ -155,8 +155,11 @@ export default class LoginScreen extends Component {
           });
 
         await this._syncUserWithStateAsync();
+      } else {
+        this.setState({ isLoggingIn: false })
       }
     } catch ({ message }) {
+      this.setState({ isLoggingIn: false })
       console.error("login: Error:" + message);
     }
   };
