@@ -8,24 +8,24 @@ import {
 } from "../../constants/Normalize";
 import { colors } from "../../constants/theme";
 
-function stringToColor(string) {
-  let hash = 0;
-  let i;
+function stringToColor(input_str) {
+  var baseRed = 128;
+  var baseGreen = 128;
+  var baseBlue = 128;
 
-  /* eslint-disable no-bitwise */
-  for (i = 0; i < string.length; i += 1) {
-    hash = string.charCodeAt(i);
-  }
+  //lazy seeded random hack to get values from 0 - 256
+  //for seed just take bitwise XOR of first two chars
+  var seed = input_str.charCodeAt(0) ^ input_str.charCodeAt(1);
+  var rand_1 = Math.abs((Math.sin(seed++) * 10000)) % 256;
+  var rand_2 = Math.abs((Math.sin(seed++) * 10000)) % 256;
+  var rand_3 = Math.abs((Math.sin(seed++) * 10000)) % 256;
 
-  let colour = '#';
+  //build colour
+  var red = Math.round((rand_1 + baseRed) / 2);
+  var green = Math.round((rand_2 + baseGreen) / 2);
+  var blue = Math.round((rand_3 + baseBlue) / 2);
 
-  for (i = 0; i < 3; i += 1) {
-    const value = (hash >> (i * 8)) & 0xff;
-    colour += `00${value.toString(16)}`.substr(-2);
-  }
-  /* eslint-enable no-bitwise */
-
-  return colour;
+  return 'rgb(' + red + ',' + green + ',' + blue + ')'
 }
 
 
