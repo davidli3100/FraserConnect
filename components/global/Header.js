@@ -12,7 +12,27 @@ import { withNavigation } from "react-navigation";
 import * as GoogleSignIn from "expo-google-sign-in";
 import * as firebase from "firebase"
 
-// create a component
+
+function stringToColor(string) {
+  let hash = 0;
+  let i;
+
+  /* eslint-disable no-bitwise */
+  for (i = 0; i < string.length; i += 1) {
+    hash = string.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  let colour = '#';
+
+  for (i = 0; i < 3; i += 1) {
+    const value = (hash >> (i * 8)) & 0xff;
+    colour += `00${value.toString(16)}`.substr(-2);
+  }
+  /* eslint-enable no-bitwise */
+
+  return colour;
+}
+
 class Header extends Component {
   constructor(props) {
     super(props);
@@ -118,7 +138,7 @@ class Header extends Component {
             await AsyncStorage.multiRemove(this.syncDeletes)
         }
     }
-
+    
   render() {
     return (
       <View style={styles.container}>
@@ -128,18 +148,18 @@ class Header extends Component {
         </View>
         <View>
           <Avatar
-            overlayContainerStyle={{ backgroundColor: theme.colors.blue }}
+            overlayContainerStyle={{ backgroundColor: stringToColor(this.props.screenName)}}
             rounded
             onPress={() => {
               this._openDrawer();
               this._asyncLogOut();
             }}
             size={heightPercentageToDP("5.1%")}
-            // title={
-            //   this.state.user["userName"]
-            //     ? this._customInitialsHandler(this.state.user["userName"])
-            //     : "John Fraser"
-            // }
+            title={
+              this.state.user["userName"]
+                ? this._customInitialsHandler(this.state.user["userName"])
+                : "John Fraser"
+            }
             source={{ uri: this.state.user["userPhoto"] }}
           />
         </View>

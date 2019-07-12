@@ -8,6 +8,27 @@ import {
 } from "../../constants/Normalize";
 import { colors } from "../../constants/theme";
 
+function stringToColor(string) {
+  let hash = 0;
+  let i;
+
+  /* eslint-disable no-bitwise */
+  for (i = 0; i < string.length; i += 1) {
+    hash = string.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  let colour = '#';
+
+  for (i = 0; i < 3; i += 1) {
+    const value = (hash >> (i * 8)) & 0xff;
+    colour += `00${value.toString(16)}`.substr(-2);
+  }
+  /* eslint-enable no-bitwise */
+
+  return colour;
+}
+
+
 class CardHeader extends Component {
   _customInitialsHandler = string => {
     var names = string.split(" "),
@@ -24,7 +45,7 @@ class CardHeader extends Component {
       <View style={styles.headerContainer}>
         <View style={styles.headerAvatar}>
           <Avatar 
-              overlayContainerStyle={{backgroundColor: colors.blue}}
+              overlayContainerStyle={{backgroundColor: stringToColor(this.props.poster)}}
               rounded
               size={heightPercentageToDP('4%')} 
               title={this.props.poster ? this._customInitialsHandler(this.props.poster) : "John Fraser"} 
@@ -80,6 +101,8 @@ class CardFooter extends Component {
     );
   }
 }
+
+
 
 export default class FeedCard extends Component {
 
