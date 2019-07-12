@@ -10,6 +10,7 @@ import * as theme from "../../constants/theme";
 import { Avatar } from "react-native-elements";
 import { withNavigation } from "react-navigation";
 import * as GoogleSignIn from "expo-google-sign-in";
+import * as firebase from "firebase"
 
 // create a component
 class Header extends Component {
@@ -103,7 +104,11 @@ class Header extends Component {
     _asyncLogOut = async() => {
         try {
             await GoogleSignIn.signOutAsync();
-            await firebase.auth().signOut();
+            try {
+              await firebase.auth().signOut();
+            } catch(err) {
+              console.log("Firebase logout err: " + err)
+            }
             await AsyncStorage.removeItem('user');
             this.props.navigation.navigate('Auth')
             // console.log('sign out successful')
@@ -130,11 +135,11 @@ class Header extends Component {
               this._asyncLogOut();
             }}
             size={heightPercentageToDP("5.1%")}
-            title={
-              this.state.user["userName"]
-                ? this._customInitialsHandler(this.state.user["userName"])
-                : "John Fraser"
-            }
+            // title={
+            //   this.state.user["userName"]
+            //     ? this._customInitialsHandler(this.state.user["userName"])
+            //     : "John Fraser"
+            // }
             source={{ uri: this.state.user["userPhoto"] }}
           />
         </View>
