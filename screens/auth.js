@@ -171,7 +171,7 @@ export default class LoginScreen extends Component {
       }
     } catch ({ message }) {
       this.setState({ isLoggingIn: false })
-      console.error("login: Error:" + message);
+      console.error("login: Error: " + message);
     }
   };
 }
