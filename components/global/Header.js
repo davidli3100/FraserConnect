@@ -101,18 +101,19 @@ class Header extends Component {
     "userPhoto"
   ];
 
-  _asyncLogOut = async () => {
-    try {
-      await GoogleSignIn.signOutAsync();
-      await AsyncStorage.removeItem("user");
-      this.props.navigation.navigate("Auth");
-      // console.log('sign out successful')
-    } catch ({ error }) {
-      console.error("Error in Logging Out: " + error);
-    } finally {
-      await AsyncStorage.multiRemove(this.syncDeletes);
+    _asyncLogOut = async() => {
+        try {
+            await GoogleSignIn.signOutAsync();
+            await firebase.auth().signOut();
+            await AsyncStorage.removeItem('user');
+            this.props.navigation.navigate('Auth')
+            // console.log('sign out successful')
+        } catch ({error}) {
+            console.error('Error in Logging Out: ' + error)
+        } finally {
+            await AsyncStorage.multiRemove(this.syncDeletes)
+        }
     }
-  };
 
   render() {
     return (
@@ -166,7 +167,7 @@ const styles = StyleSheet.create({
     paddingBottom: heightPercentageToDP("2%"),
     paddingLeft: widthPercentageToDP("4%"),
     paddingRight: widthPercentageToDP("4%"),
-    marginBottom: heightPercentageToDP("2%"),
+    // marginBottom: heightPercentageToDP("2%"),
     flex: -1,
     flexDirection: "row",
     justifyContent: "space-between",

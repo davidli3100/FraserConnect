@@ -31,7 +31,9 @@ const firebaseConfig = {
   projectId: projectId
 };
 
-firebase.initializeApp(firebaseConfig);
+if(!firebase.apps.length){
+  firebase.initializeApp(firebaseConfig);
+}
 
 export default class LoginScreen extends Component {
   constructor(props) {

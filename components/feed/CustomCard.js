@@ -22,16 +22,16 @@ class CardHeader extends Component {
   render() {
     return (
       <View style={styles.headerContainer}>
-        <View style={styles.headerLeft}>
-          {/* <Avatar 
+        <View style={styles.headerAvatar}>
+          <Avatar 
               overlayContainerStyle={{backgroundColor: colors.blue}}
               rounded
               size={heightPercentageToDP('4%')} 
               title={this.props.poster ? this._customInitialsHandler(this.props.poster) : "John Fraser"} 
-              source={{uri: this.props.posterPhoto}}/> */}
-          <Text style={styles.headerPosterTitle}>{this.props.poster}</Text>
+              source={{uri: this.props.posterPhoto}}/>
         </View>
-        <View style={styles.headerRight}>
+        <View style={styles.headerPostHeaderText}>
+          <Text style={styles.headerPosterTitle}>{this.props.poster}</Text>
           <Text style={styles.headerLightText}>{this.props.datePosted}</Text>
         </View>
       </View>
@@ -82,11 +82,21 @@ class CardFooter extends Component {
 }
 
 export default class FeedCard extends Component {
+
+  _convertSecondsToDate = (seconds) => {
+    var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    var date = new Date(seconds*1000) //convert to milliseconds
+    day = date.getDate()
+    month = date.getMonth()
+
+    return months[month] + " " + day
+  }
+
   render() {
     return (
       <View style={styles.container}>
         <CardHeader
-          datePosted={this.props.post.datePosted}
+          datePosted={this._convertSecondsToDate(this.props.post.datePosted.seconds)}
           poster={this.props.post.poster}
           posterPhoto={this.props.post.posterPhoto}
         />
@@ -95,7 +105,7 @@ export default class FeedCard extends Component {
           cardContent={this.props.post.content}
           imageURIs={this.props.post.imageURIs}
         />
-        <CardFooter />
+        {/* <CardFooter /> */}
       </View>
     );
   }
@@ -105,17 +115,20 @@ const styles = StyleSheet.create({
     shadowColor: colors.shadow,
     shadowOffset: {
       width: 0,
-      height: 0
+      height: 2
     },
     shadowOpacity: 1,
-    shadowRadius: 10,
-    elevation: 2,
-    borderRadius: 13,
-    backgroundColor: "#fff",
-    paddingTop: heightPercentageToDP("2%"),
-    paddingBottom: heightPercentageToDP("2%"),
-    paddingRight: widthPercentageToDP("3%"),
-    paddingLeft: widthPercentageToDP("3%")
+    shadowRadius: 4.5,
+    elevation: 3,
+    borderRadius: 6,
+    backgroundColor: '#fff',
+    paddingTop: heightPercentageToDP('2%'),
+    paddingBottom: heightPercentageToDP('2%'),
+    paddingRight: widthPercentageToDP('3%'),
+    paddingLeft: widthPercentageToDP('3%'),
+    marginBottom: heightPercentageToDP('2.85%'),
+    marginLeft: widthPercentageToDP('4%'),
+    marginRight: widthPercentageToDP('4%')
   },
   headerContainer: {
     flex: -1,
@@ -124,16 +137,19 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginBottom: heightPercentageToDP("2%")
   },
-  headerLeft: {
+  headerAvatar: {
     flexDirection: "row",
     alignItems: "center"
   },
-  headerRight: {
-    justifyContent: "flex-end"
+  headerPostHeaderText:{
+    marginLeft : widthPercentageToDP('2.5%'),
+    flex: 1,
+    flexDirection: 'column'
   },
   headerLightText: {
     fontFamily: "Rubik-Light",
-    fontSize: heightPercentageToDP("1.8%")
+    color: colors.gray,
+    fontSize: heightPercentageToDP("1.5%")
   },
   imagesContainer: {
     display: "flex",
@@ -154,9 +170,8 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end"
   },
   headerPosterTitle: {
-    // marginLeft : widthPercentageToDP('2.5%'),
-    fontSize: heightPercentageToDP("2.55%"),
-    fontFamily: "Rubik-Bold"
+    fontSize: heightPercentageToDP('2%'),
+    fontFamily: 'Rubik-Bold',
   },
   contentTitle: {
     fontSize: heightPercentageToDP("2.3%"),
