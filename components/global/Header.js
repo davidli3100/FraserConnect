@@ -8,8 +8,9 @@ import {
 } from "../../constants/Normalize";
 import * as theme from "../../constants/theme";
 import { Avatar } from "react-native-elements";
-import { withNavigation } from "react-navigation";
+import { withNavigation, createDrawerNavigator } from "react-navigation";
 import * as GoogleSignIn from "expo-google-sign-in";
+import CustomMenu from "../dropdown/CustomMenu.js";
 
 // create a component
 class Header extends Component {
@@ -88,7 +89,7 @@ class Header extends Component {
   };
 
   _openDrawer = () => {
-    this.props.navigation.navigate("DrawerOpen");
+    // this.props.navigation.navigate("DrawerOpen");
   };
 
   syncDeletes = [
@@ -121,20 +122,36 @@ class Header extends Component {
           <Text style={styles.textLower}>{this.props.screenName}</Text>
         </View>
         <View>
-          <Avatar
-            overlayContainerStyle={{ backgroundColor: theme.colors.blue }}
-            rounded
-            onPress={() => {
-              this._openDrawer();
-              this._asyncLogOut();
+          <CustomMenu
+            menutext="Menu"
+            menustyle={{
+              marginRight: 16,
+              flexDirection: "row",
+              justifyContent: "flex-end"
             }}
-            size={heightPercentageToDP("5.1%")}
-            title={
-              this.state.user["userName"]
-                ? this._customInitialsHandler(this.state.user["userName"])
-                : "John Fraser"
+            textStyle={{
+              color: "white"
+            }}
+            settingsClick={() => {
+              // Open Settings
+            }}
+            logoutClick={() => {
+              this._asyncLogOut();
+              // Log Out
+            }}
+            avatar={
+              <Avatar
+                overlayContainerStyle={{ backgroundColor: theme.colors.blue }}
+                rounded
+                size={heightPercentageToDP("5.1%")}
+                title={
+                  this.state.user["userName"]
+                    ? this._customInitialsHandler(this.state.user["userName"])
+                    : "John Fraser"
+                }
+                source={{ uri: this.state.user["userPhoto"] }}
+              />
             }
-            source={{ uri: this.state.user["userPhoto"] }}
           />
         </View>
       </View>
