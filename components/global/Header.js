@@ -10,9 +10,30 @@ import * as theme from "../../constants/theme";
 import { Avatar } from "react-native-elements";
 import { withNavigation, createDrawerNavigator } from "react-navigation";
 import * as GoogleSignIn from "expo-google-sign-in";
+import * as firebase from "firebase"
 import CustomMenu from "../dropdown/CustomMenu.js";
 
-// create a component
+
+function stringToColor(string) {
+  let hash = 0;
+  let i;
+
+  /* eslint-disable no-bitwise */
+  for (i = 0; i < string.length; i += 1) {
+    hash = string.charCodeAt(i);
+  }
+
+  let colour = '#';
+
+  for (i = 0; i < 3; i += 1) {
+    const value = (hash >> (i * 8)) & 0xff;
+    colour += `00${value.toString(16)}`.substr(-2);
+  }
+  /* eslint-enable no-bitwise */
+
+  return colour;
+}
+
 class Header extends Component {
   constructor(props) {
     super(props);
@@ -104,7 +125,11 @@ class Header extends Component {
     _asyncLogOut = async() => {
         try {
             await GoogleSignIn.signOutAsync();
-            await firebase.auth().signOut();
+            try {
+              await firebase.auth().signOut();
+            } catch(err) {
+              console.log("Firebase logout err: " + err)
+            }
             await AsyncStorage.removeItem('user');
             this.props.navigation.navigate('Auth')
             // console.log('sign out successful')
@@ -114,7 +139,7 @@ class Header extends Component {
             await AsyncStorage.multiRemove(this.syncDeletes)
         }
     }
-
+    
   render() {
     return (
       <View style={styles.container}>
@@ -142,7 +167,7 @@ class Header extends Component {
             }}
             avatar={
               <Avatar
-                overlayContainerStyle={{ backgroundColor: theme.colors.blue }}
+                overlayContainerStyle={{ backgroundColor: stringToColor(this.props.screenName)}}
                 rounded
                 size={heightPercentageToDP("5.1%")}
                 title={

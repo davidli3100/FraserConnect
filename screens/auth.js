@@ -18,6 +18,8 @@ import {
   databaseURL,
   projectId
 } from "../constants/firebaseConfig";
+import { heightPercentageToDP } from "../constants/Normalize";
+import { colors } from "../constants/theme";
 
 GoogleSignIn.allowInClient();
 
@@ -36,6 +38,14 @@ if(!firebase.apps.length){
 }
 
 export default class LoginScreen extends Component {
+
+  static navigationOptions = {
+    title: 'Fraser Connect',
+    headerTitleStyle: {
+      color: 'rgba(0,0,0,0.8)'
+    }
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -97,8 +107,9 @@ export default class LoginScreen extends Component {
   logInComponents = () => {
     return (
       <View style={styles.container}>
-        <Text h2>Login</Text>
-        <Button onPress={this._signInAsync} title="Sign In With Google">
+        <Text  style={styles.loginHeader}>Welcome,</Text>
+        <Text style={styles.loginSubtitle}>sign in to continue</Text>
+        <Button style={styles.loginButton} onPress={this._signInAsync} title="Sign In With Google">
           {this.buttonTitle}
         </Button>
       </View>
@@ -155,9 +166,12 @@ export default class LoginScreen extends Component {
           });
 
         await this._syncUserWithStateAsync();
+      } else {
+        this.setState({ isLoggingIn: false })
       }
     } catch ({ message }) {
-      console.error("login: Error:" + message);
+      this.setState({ isLoggingIn: false })
+      console.error("login: Error: " + message);
     }
   };
 }
@@ -168,5 +182,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center"
+  },
+  loginHeader: {
+    fontWeight: '500',
+    fontSize: heightPercentageToDP('4%')
+  },
+  loginSubtitle: {
+    color: '#7b849c',
+    fontWeight: '400',
+    fontSize: heightPercentageToDP('3.75%')
   }
 });

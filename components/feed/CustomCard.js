@@ -8,6 +8,27 @@ import {
 } from "../../constants/Normalize";
 import { colors } from "../../constants/theme";
 
+function stringToColor(input_str) {
+  var baseRed = 128;
+  var baseGreen = 128;
+  var baseBlue = 128;
+
+  //lazy seeded random hack to get values from 0 - 256
+  //for seed just take bitwise XOR of first two chars
+  var seed = input_str.charCodeAt(0) ^ input_str.charCodeAt(1);
+  var rand_1 = Math.abs((Math.sin(seed++) * 10000)) % 256;
+  var rand_2 = Math.abs((Math.sin(seed++) * 10000)) % 256;
+  var rand_3 = Math.abs((Math.sin(seed++) * 10000)) % 256;
+
+  //build colour
+  var red = Math.round((rand_1 + baseRed) / 2);
+  var green = Math.round((rand_2 + baseGreen) / 2);
+  var blue = Math.round((rand_3 + baseBlue) / 2);
+
+  return 'rgb(' + red + ',' + green + ',' + blue + ')'
+}
+
+
 class CardHeader extends Component {
   _customInitialsHandler = string => {
     var names = string.split(" "),
@@ -24,7 +45,7 @@ class CardHeader extends Component {
       <View style={styles.headerContainer}>
         <View style={styles.headerAvatar}>
           <Avatar 
-              overlayContainerStyle={{backgroundColor: colors.blue}}
+              overlayContainerStyle={{backgroundColor: stringToColor(this.props.poster)}}
               rounded
               size={heightPercentageToDP('4%')} 
               title={this.props.poster ? this._customInitialsHandler(this.props.poster) : "John Fraser"} 
@@ -80,6 +101,8 @@ class CardFooter extends Component {
     );
   }
 }
+
+
 
 export default class FeedCard extends Component {
 
