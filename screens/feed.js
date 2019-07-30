@@ -59,7 +59,7 @@ export default class FeedScreen extends Component {
     return (
       <SafeAreaView forceInset={{ bottom: 'never' }}>
         <View style={styles.container}>
-          <Header screenName="Announcements" db={db} />
+          <Header screenName="Announcements" db={db} refresh={this._refreshFeed} />
           <View style={styles.flatListContainer}>
             <FlatList
               onRefresh={() => { this._refreshFeed() }}

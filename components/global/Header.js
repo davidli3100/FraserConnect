@@ -159,6 +159,7 @@ class Header extends Component {
     };
     this.announcementsRef.add(data).then(ref => {
       console.log("Added document with ID: ", ref.id);
+      this.props.refresh();
     })
   }
 
