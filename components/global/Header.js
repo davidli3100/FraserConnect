@@ -1,6 +1,6 @@
 //import liraries
 import React, { Component, Fragment } from "react";
-import { View, StyleSheet, AsyncStorage } from "react-native";
+import { View, StyleSheet, AsyncStorage, Button } from "react-native";
 import { default as Text } from "../Text";
 import {
   widthPercentageToDP,
@@ -12,7 +12,8 @@ import { withNavigation, createDrawerNavigator } from "react-navigation";
 import * as GoogleSignIn from "expo-google-sign-in";
 import * as firebase from "firebase"
 import CustomMenu from "../dropdown/CustomMenu.js";
-
+import Prompt from 'dev3s-react-native-prompt';
+import 'firebase/firestore'
 
 function stringToColor(string) {
   let hash = 0;
@@ -38,10 +39,17 @@ class Header extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: {}
+      user: {},
+      titlePromptVisible: false,
+      bodyPromptVisible: false,
+      title: "",
+      body: ""
     };
     this._openDrawer = this._openDrawer.bind(this);
   }
+
+  
+  announcementsRef = this.props.db.collection("announcements");
 
   componentDidMount() {
     this._hydrateUserState();
@@ -122,30 +130,79 @@ class Header extends Component {
     "userPhoto"
   ];
 
-    _asyncLogOut = async() => {
-        try {
-            await GoogleSignIn.signOutAsync();
-            try {
-              await firebase.auth().signOut();
-            } catch(err) {
-              console.log("Firebase logout err: " + err)
-            }
-            await AsyncStorage.removeItem('user');
-            this.props.navigation.navigate('Auth')
-            // console.log('sign out successful')
-        } catch ({error}) {
-            console.error('Error in Logging Out: ' + error)
-        } finally {
-            await AsyncStorage.multiRemove(this.syncDeletes)
-        }
+  _asyncLogOut = async () => {
+    try {
+      await GoogleSignIn.signOutAsync();
+      try {
+        await firebase.auth().signOut();
+      } catch (err) {
+        console.log("Firebase logout err: " + err)
+      }
+      await AsyncStorage.removeItem('user');
+      this.props.navigation.navigate('Auth')
+      // console.log('sign out successful')
+    } catch ({ error }) {
+      console.error('Error in Logging Out: ' + error)
+    } finally {
+      await AsyncStorage.multiRemove(this.syncDeletes)
     }
-    
+  }
+
+  pushFirebaseStuff = () => {
+    let data = {
+      content: this.state.body,
+      datePosted: firebase.firestore.FieldValue.serverTimestamp(),
+      poster: this.state.user.userName,
+      title: this.state.title
+    };
+    this.announcementsRef.add(data).then(ref => {
+      console.log("Added document with ID: ", ref.id);
+    })
+  }
+
   render() {
     return (
       <View style={styles.container}>
         <View style={styles.containerLeft}>
           <Text style={styles.textUpper}>FRASER CONNECT</Text>
           <Text style={styles.textLower}>{this.props.screenName}</Text>
+        </View>
+        <View>
+          <Button
+            onPress={() => this.setState({
+              titlePromptVisible: true
+            })}
+            title="test"
+          />
+          <Prompt
+            title="Title"
+            placeholder="Add a creative title"
+            visible={this.state.titlePromptVisible}
+            onCancel={() => this.setState({
+              titlePromptVisible: false,
+              title: ""
+            })}
+            onSubmit={(value) => this.setState({
+              titlePromptVisible: false,
+              title: value,
+              bodyPromptVisible: true
+            })} />
+          <Prompt
+            title="Body"
+            placeholder="Now add the announcement"
+            visible={this.state.bodyPromptVisible}
+            onCancel={() => this.setState({
+              bodyPromptVisible: false,
+              title: "",
+              body: ""
+            })}
+            onSubmit={(value) =>
+              this.setState({
+                bodyPromptVisible: false,
+                body: value
+              }, () => this.pushFirebaseStuff())
+            } />
+          {/* Don't forget to add callback for post! */}
         </View>
         <View>
           <CustomMenu
@@ -167,7 +224,7 @@ class Header extends Component {
             }}
             avatar={
               <Avatar
-                overlayContainerStyle={{ backgroundColor: stringToColor(this.props.screenName)}}
+                overlayContainerStyle={{ backgroundColor: stringToColor(this.props.screenName) }}
                 rounded
                 size={heightPercentageToDP("5.1%")}
                 title={

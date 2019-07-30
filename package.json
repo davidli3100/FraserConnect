@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@eva-design/eva": "^1.0.0",
+    "dev3s-react-native-prompt": "^1.0.2",
     "expo": "^33.0.0",
     "expo-font": "^5.0.1",
     "expo-google-sign-in": "^5.0.1",
@@ -19,7 +20,10 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz",
     "react-native-elements": "^1.1.0",
     "react-native-material-menu": "^0.6.3",
+    "react-native-prompt": "^1.0.0",
+    "react-native-prompt-android": "^0.3.5",
     "react-native-ui-kitten": "^4.0.3",
+    "react-native-vector-icons": "^6.6.0",
     "react-native-web": "^0.11.4",
     "react-navigation": "^3.11.0",
     "react-ui-kitten": "^1.0.1"
