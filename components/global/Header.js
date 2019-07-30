@@ -40,15 +40,17 @@ class Header extends Component {
     super(props);
     this.state = {
       user: {},
+      clubPromptVisible: false,
       titlePromptVisible: false,
       bodyPromptVisible: false,
+      club: "",
       title: "",
       body: ""
     };
     this._openDrawer = this._openDrawer.bind(this);
   }
 
-  
+
   announcementsRef = this.props.db.collection("announcements");
 
   componentDidMount() {
@@ -152,7 +154,7 @@ class Header extends Component {
     let data = {
       content: this.state.body,
       datePosted: firebase.firestore.FieldValue.serverTimestamp(),
-      poster: this.state.user.userName,
+      poster: this.state.club,
       title: this.state.title
     };
     this.announcementsRef.add(data).then(ref => {
@@ -170,17 +172,29 @@ class Header extends Component {
         <View>
           <Button
             onPress={() => this.setState({
-              titlePromptVisible: true
+              clubPromptVisible: true
             })}
             title="test"
           />
+          
+          <Prompt
+            title="Club"
+            placeholder="What club is this for?"
+            visible={this.state.clubPromptVisible}
+            onCancel={() => this.setState({
+              clubPromptVisible: false
+            })}
+            onSubmit={(value) => this.setState({
+              clubPromptVisible: false,
+              club: value,
+              titlePromptVisible: true
+            })} />
           <Prompt
             title="Title"
             placeholder="Add a creative title"
             visible={this.state.titlePromptVisible}
             onCancel={() => this.setState({
-              titlePromptVisible: false,
-              title: ""
+              titlePromptVisible: false
             })}
             onSubmit={(value) => this.setState({
               titlePromptVisible: false,
@@ -192,17 +206,14 @@ class Header extends Component {
             placeholder="Now add the announcement"
             visible={this.state.bodyPromptVisible}
             onCancel={() => this.setState({
-              bodyPromptVisible: false,
-              title: "",
-              body: ""
+              bodyPromptVisible: false
             })}
             onSubmit={(value) =>
               this.setState({
                 bodyPromptVisible: false,
                 body: value
-              }, () => this.pushFirebaseStuff())
+              }, this.pushFirebaseStuff())
             } />
-          {/* Don't forget to add callback for post! */}
         </View>
         <View>
           <CustomMenu
