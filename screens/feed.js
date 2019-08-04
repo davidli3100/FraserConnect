@@ -15,6 +15,7 @@ import {
   databaseURL,
   projectId
 } from "../constants/firebaseConfig";
+import Events from '../components/feed/Events';
 
 const firebaseConfig = {
   apiKey: apiKey,
@@ -59,8 +60,9 @@ export default class FeedScreen extends Component {
       return (
       <SafeAreaView forceInset={{ bottom: 'never' }}>
         <View style={styles.container}>
-            <Header screenName="Announcements"/>
-            <View style={styles.flatListContainer}>
+            <Header headerDescription="Here are today's events"/>
+            <Events/>
+            {/* <View style={styles.flatListContainer}>
               <FlatList
                 onRefresh={() => {this._refreshFeed()}}
                 onEndReached={() => {this._getInfinityScrollFeed()}}
@@ -73,7 +75,7 @@ export default class FeedScreen extends Component {
                 renderItem={this.renderFeedCard}
                 keyExtractor={(item, index) => item.title + item.poster + new Date().setTime(item.datePosted.seconds*1000).toString()}
               />
-            </View>
+            </View> */}
         </View>
       </SafeAreaView>
       );

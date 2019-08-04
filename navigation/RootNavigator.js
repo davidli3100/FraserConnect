@@ -4,7 +4,4 @@ import LoginScreen from "../screens/auth";
 
 export default createStackNavigator({
   LoginScreen
-},
-{
-  headerLayoutPreset: 'center'
 });

@@ -76,12 +76,12 @@ export default class Typography extends Component {
 
 const styles = StyleSheet.create({
   text: {
-    fontFamily: "Rubik-Regular",
+    fontFamily: "Poppins-Medium",
     fontSize: theme.sizes.font,
     color: theme.colors.black
   },
-  bold: { fontFamily: "Rubik-Bold" },
-  light: { fontFamily: "Rubik-Light" },
+  bold: { fontFamily: "Poppins-Bold" },
+  light: { fontFamily: "Poppins-Regular" },
   center: { textAlign: "center" },
   right: { textAlign: "right" },
   blue: { color: theme.colors.blue },
