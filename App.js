@@ -4,6 +4,7 @@ import * as Font from "expo-font";
 import AppNavigator from "./navigation/AppNavigator";
 import { YellowBox } from 'react-native';
 import _ from 'lodash';
+import { SafeAreaView } from "react-navigation";
 
 //we don't like warnings for useless stuff
 YellowBox.ignoreWarnings(['Setting a timer']);
@@ -29,7 +30,7 @@ export default class App extends React.Component {
         />
       );
     } else {
-      return <AppNavigator />;
+      return <SafeAreaView><AppNavigator /></SafeAreaView>;
     }
   }
 

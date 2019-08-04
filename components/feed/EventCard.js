@@ -29,7 +29,7 @@ class EventCard extends Component {
                 </Text>
                 <View style={styles.detailsView}>
                     <Text style={styles.dateText}>
-                        at {this.props.data.eventDate} in{"\u0020"}
+                        on {this.props.data.eventDate} in{"\u0020"}
                         <Text style={styles.locationText}>
                             {this.props.data.eventLocation}
                         </Text>
