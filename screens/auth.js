@@ -75,11 +75,10 @@ export default class LoginScreen extends Component {
   _syncUserWithStateAsync = async (user) => {
     const data = await GoogleSignIn.signInSilentlyAsync();
     if (data) {
-      try {
         //build firebase auth
         credential = firebase.auth.GoogleAuthProvider.credential(
-          user.auth["idToken"],
-          user.auth["accessToken"]
+          data.auth["idToken"],
+          data.auth["accessToken"]
         );
         //build user
         firebase
@@ -101,11 +100,8 @@ export default class LoginScreen extends Component {
           }
         });
         const userAsyncData = await AsyncStorage.setItem("user", "true");
-        await this._syncUserDataAsync();
+        try { this._syncUserDataAsync(); } catch(err) { console.log(err); this.setState({isLoggingIn: false}) }
         this.props.navigation.navigate("App");
-    } catch(err) {
-      this.setState({isLoggingIn: false})
-    }
     } else {
       this.setState({isLoggingIn: false})
       this.setState({ user: undefined });
@@ -119,7 +115,7 @@ export default class LoginScreen extends Component {
       ["userFirstName", this.state.user["firstName"]],
       ["userLastName", this.state.user["lastName"]],
       ["userEmail", this.state.user["email"]],
-      ["userPicture", this.state.user["photoURL"]]
+      ["userPicture", JSON.stringify(this.state.user["photoURL"])]
     ]);
   };
 

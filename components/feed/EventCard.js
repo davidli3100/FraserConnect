@@ -20,7 +20,7 @@ class EventCard extends Component {
 
     render() {
         return (
-            <View style={StyleSheet.flatten([styles.container, {backgroundColor: _colourHandler(this.props.data.index)}])}>
+            <View style={StyleSheet.flatten([styles.container, {backgroundColor: _colourHandler(this.props.index)}])}>
                 <Text style={styles.clubText}>
                     {this.props.data.club}
                 </Text> 
@@ -29,7 +29,7 @@ class EventCard extends Component {
                 </Text>
                 <View style={styles.detailsView}>
                     <Text style={styles.dateText}>
-                        on {this.props.data.eventDate} in{"\u0020"}
+                        at {this.props.data.eventDate} in{"\u0020"}
                         <Text style={styles.locationText}>
                             {this.props.data.eventLocation}
                         </Text>

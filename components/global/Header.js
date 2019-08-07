@@ -186,7 +186,7 @@ class Header extends Component {
               color: "white"
             }}
             settingsClick={() => {
-              console.log(this.state)
+              console.log(this.state.user)
             }}
             logoutClick={() => {
               this._asyncLogOut();

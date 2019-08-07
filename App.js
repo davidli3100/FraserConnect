@@ -30,7 +30,7 @@ export default class App extends React.Component {
         />
       );
     } else {
-      return <SafeAreaView><AppNavigator /></SafeAreaView>;
+      return <AppNavigator />;
     }
   }
 

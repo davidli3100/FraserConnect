@@ -3,17 +3,26 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import EventCard from './EventCard';
 import { heightPercentageToDP, widthPercentageToDP } from '../../constants/Normalize';
+import { FlatList } from 'react-native';
 
 // create a component
 class Events extends Component {
+
+    renderEventCard = (props) => {
+        return (
+          <EventCard data={props.item} index={props.index}/>
+        )
+      }
+
     render() {
         return (
-            <View style={styles.container}>
-                <EventCard data={{index: 0, club: "Student Activity Council", title: "Summer Carnival", eventDate: "July 13", eventLocation: "the courtyard"}}/>
-                <EventCard data={{index: 1, club: "Student Activity Council", title: "Summer Carnival", eventDate: "July 13", eventLocation: "the courtyard"}}/>
-                <EventCard data={{index: 2, club: "Student Activity Council", title: "Summer Carnival", eventDate: "July 13", eventLocation: "the courtyard"}}/>
-                <EventCard data={{index: 3, club: "Student Activity Council", title: "Summer Carnival", eventDate: "July 13", eventLocation: "the courtyard"}}/>
-            </View>
+            <FlatList
+                horizontal={true}
+                style={styles.container}
+                data={[{club: "Student Activity Council", title: "Summer Carnival", eventDate: "11am", eventLocation: "the courtyard"}]}
+                renderItem={this.renderEventCard}
+                keyExtractor={(item, index) => item.title + item.club + item.eventDate}
+            />
         );
     }
 }
@@ -25,9 +34,9 @@ const styles = StyleSheet.create({
         paddingBottom: heightPercentageToDP('2%'),
         marginLeft: widthPercentageToDP("4.5%"),
         flex: 1,
-        justifyContent: 'flex-start',
-        flexDirection: "row",
-        alignItems: 'flex-start',
+        // justifyContent: 'flex-start',
+        // flexDirection: "row",
+        // alignItems: 'flex-start',
         backgroundColor: '#fff',
         maxHeight: heightPercentageToDP('22%'),
         width: widthPercentageToDP('95.5%'),
