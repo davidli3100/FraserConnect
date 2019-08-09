@@ -17,11 +17,12 @@ class Events extends Component {
     render() {
         return (
             <FlatList
+                showsHorizontalScrollIndicator={false}
                 horizontal={true}
                 style={styles.container}
-                data={[{club: "Student Activity Council", title: "Summer Carnival", eventDate: "11am", eventLocation: "the courtyard"}]}
+                data={[{club: "Student Activity Council", title: "Summer Carnival", eventDate: "11am", eventLocation: "the courtyard"}, {club: "Student Activity Council", title: "Summer Carnival", eventDate: "11am", eventLocation: "the courtyard"}, {club: "Student Activity Council", title: "Summer Carnival", eventDate: "11am", eventLocation: "the courtyard"}, {club: "Student Activity Council", title: "Summer Carnival", eventDate: "11am", eventLocation: "the courtyard"}, {club: "Student Activity Council", title: "Summer Carnival", eventDate: "11am", eventLocation: "the courtyard"}, {club: "Student Activity Council", title: "Summer Carnival", eventDate: "11am", eventLocation: "the courtyard"} ]}
                 renderItem={this.renderEventCard}
-                keyExtractor={(item, index) => item.title + item.club + item.eventDate}
+                keyExtractor={(item, index) => item.title + ' ' + item.club + ' ' + item.eventDate + ' ' + index}
             />
         );
     }
@@ -32,14 +33,14 @@ const styles = StyleSheet.create({
     container: {
         paddingTop: heightPercentageToDP('2%'),
         paddingBottom: heightPercentageToDP('2%'),
-        marginLeft: widthPercentageToDP("4.5%"),
+        // marginLeft: widthPercentageToDP("4.5%"),
         flex: 1,
         // justifyContent: 'flex-start',
         // flexDirection: "row",
         // alignItems: 'flex-start',
         backgroundColor: '#fff',
         maxHeight: heightPercentageToDP('22%'),
-        width: widthPercentageToDP('95.5%'),
+        width: widthPercentageToDP('100%'),
         overflow: 'scroll'
     },
 });
