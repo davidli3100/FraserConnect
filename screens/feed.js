@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Platform, StatusBar, AsyncStorage } from 'react-native';
+import { StyleSheet, View, Platform, StatusBar, AsyncStorage, Text } from 'react-native';
 import FeedCard from '../components/feed/CustomCard';
 import {FlatList, SafeAreaView} from 'react-navigation'
 import Header from '../components/global/Header';
@@ -63,6 +63,9 @@ export default class FeedScreen extends Component {
             <Header headerDescription="Here are today's events"/>
             <Events/>
             <View style={styles.flatListContainer}>
+              <Text style={styles.feedHeader}>
+                Announcements
+              </Text>
               <FlatList
                 showsVerticalScrollIndicator={false}
                 onRefresh={() => {this._refreshFeed()}}
@@ -192,5 +195,12 @@ export default class FeedScreen extends Component {
     },
     flatList: {
       marginBottom: heightPercentageToDP('6%')
+    },
+    feedHeader: {
+      marginLeft: widthPercentageToDP('4.5%'),
+      fontFamily: "Poppins-SemiBold",
+      fontSize: heightPercentageToDP('2.5%'),
+      color: '#102A43',
+      marginBottom: heightPercentageToDP('1%')
     }
 });

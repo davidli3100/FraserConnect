@@ -78,7 +78,7 @@ class CardContent extends Component {
       <View style={styles.contentContainer}>
         <Text style={styles.contentTitle}>{this.props.title}</Text>
         {this.props.cardContent.length > 0 &&
-        <Text numberOfLines={1} ellipsizeMode="tail" style={styles.contentText}>{this.props.cardContent}</Text> }
+        <Text numberOfLines={2} ellipsizeMode="tail" style={styles.contentText}>{this.props.cardContent}</Text> }
       </View>
     );
   }
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     paddingRight: widthPercentageToDP('3%'),
     paddingLeft: widthPercentageToDP('3%'),
     marginBottom: heightPercentageToDP('2.85%'),
-    marginLeft: widthPercentageToDP('4%'),
+    marginLeft: widthPercentageToDP('6%'),
     marginRight: widthPercentageToDP('-1.5%')
   },
   headerContainer: {
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
   },
   contentText: {
     fontFamily: "Poppins-Medium",
-    fontSize: heightPercentageToDP("1.4%"),
+    fontSize: heightPercentageToDP("1.35%"),
     color: '#102A43'
   },
   contentContainer: {
