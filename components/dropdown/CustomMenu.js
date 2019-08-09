@@ -21,7 +21,6 @@ export default class CustomMenu extends Component {
       source={{ uri: photoUri }}
     />
     } else {
-      console.log(this.stringToColor(name))
       return <Avatar
       containerStyle={styles.avatarStyle}
       avatar={styles.avatarStyle}

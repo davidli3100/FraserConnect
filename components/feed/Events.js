@@ -19,6 +19,7 @@ class Events extends Component {
             <FlatList
                 showsHorizontalScrollIndicator={false}
                 horizontal={true}
+                ListFooterComponent={<View style={{marginRight: heightPercentageToDP('4.5%')}}></View>}
                 style={styles.container}
                 data={[{club: "Student Activity Council", title: "Summer Carnival", eventDate: "11am", eventLocation: "the courtyard"}, {club: "Student Activity Council", title: "Summer Carnival", eventDate: "11am", eventLocation: "the courtyard"}, {club: "Student Activity Council", title: "Summer Carnival", eventDate: "11am", eventLocation: "the courtyard"}, {club: "Student Activity Council", title: "Summer Carnival", eventDate: "11am", eventLocation: "the courtyard"}, {club: "Student Activity Council", title: "Summer Carnival", eventDate: "11am", eventLocation: "the courtyard"}, {club: "Student Activity Council", title: "Summer Carnival", eventDate: "11am", eventLocation: "the courtyard"} ]}
                 renderItem={this.renderEventCard}
@@ -33,11 +34,7 @@ const styles = StyleSheet.create({
     container: {
         paddingTop: heightPercentageToDP('2%'),
         paddingBottom: heightPercentageToDP('2%'),
-        // marginLeft: widthPercentageToDP("4.5%"),
         flex: 1,
-        // justifyContent: 'flex-start',
-        // flexDirection: "row",
-        // alignItems: 'flex-start',
         backgroundColor: '#fff',
         maxHeight: heightPercentageToDP('22%'),
         width: widthPercentageToDP('100%'),

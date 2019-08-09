@@ -62,11 +62,12 @@ export default class FeedScreen extends Component {
         <View style={styles.container}>
             <Header headerDescription="Here are today's events"/>
             <Events/>
-            {/* <View style={styles.flatListContainer}>
+            <View style={styles.flatListContainer}>
               <FlatList
+                showsVerticalScrollIndicator={false}
                 onRefresh={() => {this._refreshFeed()}}
                 onEndReached={() => {this._getInfinityScrollFeed()}}
-                onEndReachedThreshold={0.45}
+                onEndReachedThreshold={0.4}
                 extraData={this.state.extraData}
                 refreshing={this.state.refreshing}
                 style={styles.flatList}
@@ -75,7 +76,7 @@ export default class FeedScreen extends Component {
                 renderItem={this.renderFeedCard}
                 keyExtractor={(item, index) => item.title + item.poster + new Date().setTime(item.datePosted.seconds*1000).toString()}
               />
-            </View> */}
+            </View>
         </View>
       </SafeAreaView>
       );
@@ -182,9 +183,10 @@ export default class FeedScreen extends Component {
     container: {
       paddingTop: Platform.OS === 'ios' ? 0 : StatusBar.currentHeight,
       height: heightPercentageToDP('100%'),
-      backgroundColor: 'rgba(254,254,254,1)',
+      backgroundColor: '#F0F4F8',
     },
     flatListContainer: {
+      marginTop: heightPercentageToDP('2%'),
       width: widthPercentageToDP('100%'),
       flex: 1
     },
