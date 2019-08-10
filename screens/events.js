@@ -27,17 +27,31 @@ class Events extends Component {
 const styles = StyleSheet.create({
   container: {
     paddingTop: Platform.OS === "ios" ? 0 : StatusBar.currentHeight,
-    backgroundColor: "#ffffff"
+    backgroundColor: "#ffffff",
+    height: heightPercentageToDP('100%'),
+    display: 'flex',
+    flexDirection: 'column'
   },
   eventsContainer: {
+    flex: 1,
     backgroundColor: "#FAFAFC",
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
+    marginTop: heightPercentageToDP('1.5%'),
+    elevation: 2,
+    shadowRadius: 1.5,
+    shadowColor: "#000000",
+    shadowOpacity: 0.08,
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
   },
   headingText: {
+    marginTop: heightPercentageToDP('1.5%'),
     marginLeft: widthPercentageToDP('4.5%'),
     fontFamily: "Poppins-SemiBold",
-    fontSize: heightPercentageToDP('2.5%'),
+    fontSize: heightPercentageToDP('3%'),
     color: '#102A43',
     marginBottom: heightPercentageToDP('1%')
   }

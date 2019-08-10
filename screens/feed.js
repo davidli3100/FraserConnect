@@ -138,10 +138,14 @@ export default class FeedScreen extends Component {
   };
 
   _hydrateInitialFeed = async () => {
+    this.setState({
+      refreshing: true
+    })
     //get the first 10 announcements in the feed (desc order)
     data = await announcementsRef.orderBy("datePosted", "desc").limit(8).get()
     this.setState({
       announcements: data.docs.map(doc => doc.data()),
+      refreshing: false
     })
     return true
   }
