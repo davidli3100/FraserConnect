@@ -1,28 +1,139 @@
 //import liraries
 import React, { Component } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Platform } from 'react-native';
 import { heightPercentageToDP, widthPercentageToDP } from '../../constants/Normalize';
 import { Button } from 'react-native-elements';
-import * as firebase from 'firebase'
-import 'firebase/firestore'
+import * as Calendar from 'expo-calendar'
+import * as Permissions from 'expo-permissions'
 
 // create a component
 class EventCard extends Component {
 
-    convertDate = (date) => {
-        var jDate = new Date(date*1000)
+    constructor(props) {
+        super(props)
+        this.state = {
+            calendars: [],
+            haveCalendarPermissions: false,
+            activeCalendar: null
+        }
+    }
+
+    askForCalendarPermissions = async () => {
+        const response = await Permissions.askAsync(Permissions.CALENDAR);
+        const granted = response.status === 'granted';
+        this.setState({
+          haveCalendarPermissions: granted,
+        });
+        return granted;
+    }
+
+    _findCalendars = async () => {
+        const calendarGranted = await this.askForCalendarPermissions();
+        if (calendarGranted) {
+          const eventCalendars = (await Calendar.getCalendarsAsync('event'));
+          this.setState({ calendars: [...eventCalendars] });
+        }
+      }
+
+    addEventToCalendar = async () => {
+        Calendar.deleteCalendarAsync("35")
+        event = this.props.event
+        await this._findCalendars()
+        // console.log(this.state)
+        for(var i = 0; i < this.state.calendars.length; i++) {
+            // console.log(this.state.calendars[i].ownerAccount)
+            if(this.state.calendars[i].title === "John Fraser SS Events") {
+                eventDetails = {
+                    title: event.title,
+                    startDate: new Date(event.startDate.seconds*1000),
+                    endDate: new Date(event.endDate.seconds*1000),
+                    location: event.location,
+                    id: event.title + ' ' + event.startDate.seconds,
+                    alarms: [{relativeOffset: -30, method: "alert"}]
+                }
+                this.setState({activeCalendar: this.state.calendars[i].title})
+                var calendarID = this.state.calendars[i].id.toString()
+                await Calendar.createEventAsync(String(calendarID), eventDetails).catch(err => console.log(err))
+                // ExpoCalendar.createEventAsync(calendar, details)
+                // console.log(details)
+            }
+        }
+        if(this.state.activeCalendar !== "John Fraser SS Events") {
+            calendarDetails = {
+                id: "John Fraser SS Events",
+                title: "John Fraser SS Events",
+                entityType: "Calendar.EntityTypes.EVENT",
+                color: "#0063e7",
+                allowsModifications: true,
+                sourceId: 
+                Platform.OS === 'ios'
+                  ? this.state.calendars.find(cal => cal.source && cal.source.name === 'Default').source.id
+                  : undefined,
+                source:
+                    Platform.OS === 'android'
+                    ? {
+                        name: this.state.calendars.find(
+                            cal => cal.accessLevel === Calendar.CalendarAccessLevel.OWNER
+                        ).source.name,
+                        isLocalAccount: true,
+                    }
+                    : undefined,
+                name: "John Fraser SS Events",
+                ownerAccount: "Fraser Connect",
+                accessLevel: "Calendar.CalendarAccessLevel.ROOT"
+            }
+            await Calendar.createCalendarAsync(calendarDetails)
+            await this.addEventToCalendar()
+        }
+    }
+
+    convertDate = (startDate, endDate) => {
+        var jDate = new Date(startDate*1000)
         var dateString = jDate.toDateString()
         var hours = jDate.getHours();
         var minutes = jDate.getMinutes()
+        var sameDay = false
         if(minutes < 10) {
             minutes = "0" + minutes
         }
+
+        var jDate2 = new Date(endDate*1000)  
+        var dateString2 = jDate2.toDateString()
+        var hours2 = jDate2.getHours();
+        var minutes2 = jDate2.getMinutes()
+        if(minutes2 < 10) {
+            minutes2 = "0" + minutes2
+        }  
+
         if(hours >= 13 && hours !== 12) {
-            return dateString + '\n' + hours-12+':'+ minutes + ' ' + 'PM' 
+            var finalStartDate = dateString + ' ' + hours-12+':'+ minutes + ' ' + 'p.m.' 
         } else if (hours === 12) {
-            return dateString + '\n' + hours + ':' + minutes + ' ' + 'PM'
+            var finalStartDate = dateString + ' ' + hours + ':' + minutes + ' ' + 'p.m.'
         } else {
-            return dateString + '\n' + hours + ':' + minutes + ' ' + 'AM'
+            var finalStartDate = dateString + ' ' + hours + ':' + minutes + ' ' + 'a.m.'
+        }
+
+        if(hours2 >= 13 && hours2 !== 12) {
+            var finalStartDate2 = dateString2 + ' ' + hours2-12+':'+ minutes2 + ' ' + 'p.m.' 
+        } else if (dateString2 === dateString && hours2 === 12) {
+            var finalStartDate2 = hours2 + ':' + minutes2 + ' ' + 'p.m.'
+            sameDay = true
+        } else if(hours2 >= 13 && hours2 !== 12 && dateString === dateString2) {
+            var finalStartDate2 = hours2-12+':'+ minutes2 + ' ' + 'p.m.' 
+            sameDay = true
+        } else if(hours2 < 13 && dateString === dateString2) {
+            var finalStartDate2 = hours2 +':'+ minutes2 + ' ' + 'a.m.' 
+            sameDay = true
+        } else if (hours2 === 12) {
+            var finalStartDate2 = dateString2 + ' ' + hours2 + ':' + minutes2 + ' ' + 'p.m.'
+        } else {
+            var finalStartDate2 = dateString2 + ' ' + hours2 + ':' + minutes2 + ' ' + 'a.m.'
+        }
+        
+        if(sameDay) {
+            return finalStartDate + ' - '+ finalStartDate2
+        } else {
+            return finalStartDate + " to" + '\n' + finalStartDate2
         }
     }
  
@@ -31,7 +142,7 @@ class EventCard extends Component {
             <View style={styles.container}>
                 <View style={styles.headerContainer}>
                     <Text style={styles.textPoster}>{this.props.event.club}</Text>
-                    <Button title="Add to Calendar" titleStyle={styles.calendarButtonText} buttonStyle={styles.calendarButton}>
+                    <Button title="Add to Calendar" onPress={this.addEventToCalendar} titleStyle={styles.calendarButtonText} buttonStyle={styles.calendarButton}>
                         Add to Calendar
                     </Button>
                 </View>
@@ -43,7 +154,7 @@ class EventCard extends Component {
                         {this.props.event.location}
                     </Text>
                     <Text style={styles.eventDate}>
-                        {this.convertDate(this.props.event.date.seconds)}
+                        {this.convertDate(this.props.event.startDate.seconds, this.props.event.endDate.seconds)}
                     </Text>
                     <View style={styles.socialContainer}>
                         <Text style={styles.numberPeople}>
@@ -112,7 +223,7 @@ const styles = StyleSheet.create({
         color: "#ffffff",
     },
     eventTitle: {
-        marginTop: heightPercentageToDP('2.3%'),
+        marginTop: heightPercentageToDP('2.6%'),
         fontSize: heightPercentageToDP('2.4%'),
         color: "#102A43",
         fontFamily: "Poppins-SemiBold",
@@ -125,10 +236,11 @@ const styles = StyleSheet.create({
         fontSize: heightPercentageToDP("1.7%")
     },
     eventDate: {
-        marginTop: heightPercentageToDP('-0.6%'),
+        marginTop: heightPercentageToDP('-0.3%'),
         color: "#102A43",
         fontFamily: "Poppins-Medium",
-        fontSize: heightPercentageToDP('1.7%')
+        fontSize: heightPercentageToDP('1.7%'),
+        lineHeight: heightPercentageToDP('2%')
     },
     socialContainer: {
         flexDirection: "row",

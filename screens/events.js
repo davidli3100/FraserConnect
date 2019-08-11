@@ -58,13 +58,11 @@ class Events extends Component {
       refreshing: true
     })
     //get the first 10 announcements in the feed (desc order)
-    data = await eventsRef.where("date", ">=", firebase.firestore.Timestamp.now()).orderBy("date").limit(8).get().catch(err => console.log(err))
+    data = await eventsRef.where("endDate", ">=", firebase.firestore.Timestamp.now()).orderBy("endDate").limit(8).get().catch(err => console.log(err))
     this.setState({
       events: data.docs.map(doc => doc.data()),
       refreshing: false
     })
-
-    console.log(this.state.events)
   }
 
   renderEventCard = (props) => {
@@ -93,7 +91,7 @@ class Events extends Component {
           renderItem={this.renderEventCard}
           data={this.state.events}
           refreshing={this.state.refreshing}
-          keyExtractor={(item, index) => item.title + item.poster + new Date().setTime(item.date.seconds*1000).toString()}
+          keyExtractor={(item, index) => item.title + item.poster + new Date().setTime(item.endDate.seconds*1000).toString()}
           />
         </View>
       </View>
