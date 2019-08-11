@@ -13,14 +13,16 @@ class EventCard extends Component {
         var jDate = new Date(date*1000)
         var dateString = jDate.toDateString()
         var hours = jDate.getHours();
-        if (hours < 10) {
-            hours = "0" + hours
-        }
         var minutes = jDate.getMinutes()
-        if(hours >= 13) {
-            return dateString + ' ' + hours-12+':'+ minutes + ' ' + 'PM' 
+        if(minutes < 10) {
+            minutes = "0" + minutes
+        }
+        if(hours >= 13 && hours !== 12) {
+            return dateString + '\n' + hours-12+':'+ minutes + ' ' + 'PM' 
+        } else if (hours === 12) {
+            return dateString + '\n' + hours + ':' + minutes + ' ' + 'PM'
         } else {
-            return dateString + ' ' + hours + ':' + minutes + ' ' + 'AM'
+            return dateString + '\n' + hours + ':' + minutes + ' ' + 'AM'
         }
     }
  
@@ -77,8 +79,8 @@ const styles = StyleSheet.create({
         color:  "#102A43",
         textTransform: "uppercase",
         lineHeight: heightPercentageToDP("2%"),
-        marginTop: heightPercentageToDP('2.8%'),
-        marginBottom: heightPercentageToDP("2.2%")
+        marginTop: heightPercentageToDP('2.2%'),
+        marginBottom: heightPercentageToDP("2%")
     },
     headerContainer: {
         display: 'flex',
@@ -99,10 +101,10 @@ const styles = StyleSheet.create({
         alignItems: "flex-start"
     },
     calendarButton: {
-        height: heightPercentageToDP('3.75%'),
+        height: heightPercentageToDP('4%'),
         backgroundColor: "#0063E7",
         borderRadius: 10,
-        width: widthPercentageToDP('34.5%')
+        width: widthPercentageToDP('34%')
     },
     calendarButtonText: {
         fontSize: heightPercentageToDP("1.6%"),
@@ -117,7 +119,7 @@ const styles = StyleSheet.create({
         lineHeight: heightPercentageToDP('2.6%')
     },
     eventLocation: {
-        marginTop: heightPercentageToDP('0.8%'),
+        marginTop: heightPercentageToDP('1%'),
         color: "#627D98",
         fontFamily: "Poppins-Medium",
         fontSize: heightPercentageToDP("1.7%")
@@ -131,8 +133,8 @@ const styles = StyleSheet.create({
     socialContainer: {
         flexDirection: "row",
         alignItems: "center",
-        marginTop: heightPercentageToDP('1%'),
-        marginBottom: heightPercentageToDP('2.3%')
+        marginTop: heightPercentageToDP('1.2%'),
+        marginBottom: heightPercentageToDP('1.5%')
     },
     numberPeople: {
         backgroundColor: "#DCEEFB",

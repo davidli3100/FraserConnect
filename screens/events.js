@@ -73,6 +73,12 @@ class Events extends Component {
     )
   }
 
+  returnSeparator = () => {
+    return (
+      <View style={styles.separator}></View>
+    )
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -82,6 +88,7 @@ class Events extends Component {
             Upcoming Events
           </Text>
           <FlatList
+          ItemSeparatorComponent={this.returnSeparator}
           style={styles.flatList}
           renderItem={this.renderEventCard}
           data={this.state.events}
@@ -125,6 +132,13 @@ const styles = StyleSheet.create({
     fontSize: heightPercentageToDP('3%'),
     color: '#102A43',
     marginBottom: heightPercentageToDP('0.9%')
+  },
+  separator: {
+    borderBottomColor: "#BCCCDC",
+    borderBottomWidth: 0.5,
+    width: widthPercentageToDP('100%'),
+    marginTop: heightPercentageToDP('2%'),
+    marginBottom: heightPercentageToDP('2%')
   }
 });
 
