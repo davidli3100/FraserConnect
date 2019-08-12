@@ -8,7 +8,7 @@ import {
   Platform,
   StatusBar
 } from "react-native";
-import {Button} from 'react-native-elements'
+import { Button } from "react-native-elements";
 import { default as Text } from "../components/Text";
 import * as GoogleSignIn from "expo-google-sign-in";
 import * as firebase from "firebase";
@@ -21,7 +21,11 @@ import {
   databaseURL,
   projectId
 } from "../constants/firebaseConfig";
-import { heightPercentageToDP, widthPercentageToDP } from "../constants/Normalize";
+import {
+  heightPercentageToDP,
+  widthPercentageToDP
+} from "../constants/Normalize";
+import NetInfo from "@react-native-community/netinfo";
 
 GoogleSignIn.allowInClient();
 
@@ -35,19 +39,19 @@ const firebaseConfig = {
   projectId: projectId
 };
 
-if(!firebase.apps.length){
+if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
 
 export default class LoginScreen extends Component {
-
   static navigationOptions = {
     header: null
-  }
+  };
 
   constructor(props) {
     super(props);
     this.state = {
+      connected: false,
       isLoggingIn: false
     };
   }
@@ -66,44 +70,49 @@ export default class LoginScreen extends Component {
           "com.googleusercontent.apps.855800292598-okhc8gk405slk750gukupgf12u82o5qi"
       });
     } catch ({ error }) {
-      this.setState({isLoggingIn: false})
+      this.setState({ isLoggingIn: false });
       console.error("Error: " + error);
     }
     this._syncUserWithStateAsync();
   };
 
-  _syncUserWithStateAsync = async (user) => {
+  _syncUserWithStateAsync = async user => {
     const data = await GoogleSignIn.signInSilentlyAsync();
     if (data) {
-        //build firebase auth
-        credential = firebase.auth.GoogleAuthProvider.credential(
-          data.auth["idToken"],
-          data.auth["accessToken"]
-        );
-        //build user
-        firebase
-          .auth()
-          .signInWithCredential(credential)
-          .then(user => {
-            console.log(user);
-          })
-          .catch(error => {
-            console.log("Firebase error: " + error);
-          });        
-        this.setState({ isLoggingIn: true });
-        const photoURL = await GoogleSignIn.getPhotoAsync(256);
-        const userData = await GoogleSignIn.getCurrentUserAsync();
-        await this.setState({
-          user: {
-            ...userData.toJSON(),
-            photoURL: photoURL || userData.photoURL
-          }
+      //build firebase auth
+      credential = firebase.auth.GoogleAuthProvider.credential(
+        data.auth["idToken"],
+        data.auth["accessToken"]
+      );
+      //build user
+      firebase
+        .auth()
+        .signInWithCredential(credential)
+        .then(user => {
+          console.log(user);
+        })
+        .catch(error => {
+          console.log("Firebase error: " + error);
         });
-        const userAsyncData = await AsyncStorage.setItem("user", "true");
-        try { this._syncUserDataAsync(); } catch(err) { console.log(err); this.setState({isLoggingIn: false}) }
-        this.props.navigation.navigate("App");
+      this.setState({ isLoggingIn: true });
+      const photoURL = await GoogleSignIn.getPhotoAsync(256);
+      const userData = await GoogleSignIn.getCurrentUserAsync();
+      await this.setState({
+        user: {
+          ...userData.toJSON(),
+          photoURL: photoURL || userData.photoURL
+        }
+      });
+      const userAsyncData = await AsyncStorage.setItem("user", "true");
+      try {
+        this._syncUserDataAsync();
+      } catch (err) {
+        console.log(err);
+        this.setState({ isLoggingIn: false });
+      }
+      this.props.navigation.navigate("App");
     } else {
-      this.setState({isLoggingIn: false})
+      this.setState({ isLoggingIn: false });
       this.setState({ user: undefined });
     }
   };
@@ -122,17 +131,25 @@ export default class LoginScreen extends Component {
   logInComponents = () => {
     return (
       <View style={styles.container}>
-        <Text  style={styles.loginHeader}>Welcome,</Text>
+        <Text style={styles.loginHeader}>Welcome,</Text>
         <Text style={styles.loginSubtitle}>sign in to continue</Text>
         <Image
           style={styles.loginImage}
           resizeMode="contain"
-          source={require('../assets/Images/login.png')}
+          source={require("../assets/Images/login.png")}
         />
-        <Button onPress={this._signInAsync} title="Sign In With Google" titleStyle={styles.loginButtonText} buttonStyle={styles.loginButton}>
-            {this.buttonTitle}
+        <Button
+          onPress={this._signInAsync}
+          title="Sign In With Google"
+          titleStyle={styles.loginButtonText}
+          buttonStyle={styles.loginButton}
+        >
+          {this.buttonTitle}
         </Button>
-        <Text style={styles.creditText}>Made with <Text style={styles.emoji}>{'\u2615'}</Text> by David Li and Jason Huang</Text>
+        <Text style={styles.creditText}>
+          Made with <Text style={styles.emoji}>{"\u2615"}</Text> by David Li and
+          Jason Huang
+        </Text>
       </View>
     );
   };
@@ -164,79 +181,85 @@ export default class LoginScreen extends Component {
   };
 
   _signInAsync = async () => {
-    try {
-      this.setState({ isLoggingIn: true });
-      await GoogleSignIn.askForPlayServicesAsync();
-      const { type, user } = await GoogleSignIn.signInAsync();
-      if (type === "success") {
-        console.log(user.auth);
-        await this._syncUserWithStateAsync(user);
-      } else {
-        this.setState({ isLoggingIn: false })
-      }
-    } catch ({ message }) {
-      this.setState({ isLoggingIn: false })
-      console.error("login: Error: " + message);
-    }
+    NetInfo.fetch().then(state => {
+      console.log('Connection type', state.type);
+      console.log('Is connected?', state.isConnected);
+    });
+  //   try {
+  //     this.setState({ isLoggingIn: true });
+  //     await GoogleSignIn.askForPlayServicesAsync();
+  //     const { type, user } = await GoogleSignIn.signInAsync();
+  //     if (type === "success") {
+  //       console.log(user.auth);
+  //       await this._syncUserWithStateAsync(user);
+  //     } else {
+  //       this.setState({ isLoggingIn: false });
+  //     }
+  //   } catch ({ message }) {
+  //     this.setState({ isLoggingIn: false });
+  //     alert("login: Error: " + message);
+  //   }
   };
 }
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: Platform.OS === 'ios' ? 0 : StatusBar.currentHeight + heightPercentageToDP('13.5%'),
+    paddingTop:
+      Platform.OS === "ios"
+        ? 0
+        : StatusBar.currentHeight + heightPercentageToDP("13.5%"),
     flex: 1,
-    flexDirection: 'column',
+    flexDirection: "column",
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center"
   },
   loginHeader: {
-    width: widthPercentageToDP('75%'),
-    lineHeight: heightPercentageToDP('4%'),
+    width: widthPercentageToDP("75%"),
+    lineHeight: heightPercentageToDP("4%"),
     textAlign: "left",
     fontFamily: "Poppins-Medium",
-    fontSize: heightPercentageToDP('3.75%')
+    fontSize: heightPercentageToDP("3.75%")
   },
   loginSubtitle: {
-    width: widthPercentageToDP('75%'),
-    lineHeight: heightPercentageToDP('4%'),
+    width: widthPercentageToDP("75%"),
+    lineHeight: heightPercentageToDP("4%"),
     textAlign: "left",
     fontFamily: "Poppins-Medium",
-    color: '#9aa5b1',
-    fontSize: heightPercentageToDP('3.75%')
+    color: "#9aa5b1",
+    fontSize: heightPercentageToDP("3.75%")
   },
   loginImage: {
-    width: widthPercentageToDP('65%'),
-    height: heightPercentageToDP('47.44%')
+    width: widthPercentageToDP("65%"),
+    height: heightPercentageToDP("47.44%")
   },
   loginButton: {
     borderRadius: 7,
-    paddingLeft: widthPercentageToDP('8.5%'),
-    paddingRight: widthPercentageToDP('8.5%'), 
-    paddingTop: heightPercentageToDP('1.5%'),
-    paddingBottom: heightPercentageToDP('1.5%'),
-    backgroundColor: '#10294c',
-    alignItems: 'center',
-    justifyContent: 'center',
+    paddingLeft: widthPercentageToDP("8.5%"),
+    paddingRight: widthPercentageToDP("8.5%"),
+    paddingTop: heightPercentageToDP("1.5%"),
+    paddingBottom: heightPercentageToDP("1.5%"),
+    backgroundColor: "#10294c",
+    alignItems: "center",
+    justifyContent: "center",
     shadowColor: "#40000000",
     shadowOffset: {
       width: 0,
-      height: 4,
+      height: 4
     },
     shadowRadius: 4,
     elevation: 4
-
   },
   loginButtonText: {
     color: "#e5e5e5",
     fontFamily: "Poppins-SemiBold",
-    fontSize: heightPercentageToDP('2.4%')
+    fontSize: heightPercentageToDP("2.4%")
   },
   creditText: {
-    marginTop: 'auto',
+    marginTop: "auto",
     color: "rgba(0, 0, 0, 0.5)",
-    fontSize: heightPercentageToDP('1.5%'),
+    fontSize: heightPercentageToDP("1.5%"),
     fontFamily: "Poppins-Regular",
-    marginBottom: heightPercentageToDP('0.75%')
+    marginBottom: heightPercentageToDP("0.75%")
   }
 });
