@@ -24,7 +24,7 @@ class EventCard extends Component {
 
     componentDidMount() { 
         console.log('remount')
-        //uncomment for master reset :/
+        // uncomment for master reset of calendar :/
         // AsyncStorage.removeItem('addedEvents')
         // Calendar.deleteCalendarAsync('34')
         AsyncStorage.getItem('addedEvents').then(res => {
@@ -38,19 +38,23 @@ class EventCard extends Component {
     }
 
     customEventCheck = (events) => {
+        var found = false
         for (var i =0; i < events.length; i++) {
             splitEvent = events[i].split(" ")
-            if(splitEvent[0] === this.props.event.title && splitEvent[1] === String(this.props.event.startDate.seconds)) {
+            if(splitEvent[0] === this.props.event.title.replace(/ /g,'') && splitEvent[1] === String(this.props.event.startDate.seconds)) {
                 this.setState({eventIndex: i})
                 return true
             }
+        }
+        if(found===false) {
+            return false
         }
     }
 
     customIDCheck = (events) => {
         for (var i =0; i < events.length; i++) {
             splitEvent = events[i].split(" ")
-            if(splitEvent[0] === this.props.event.title && splitEvent[1] === String(this.props.event.startDate.seconds)) {
+            if(splitEvent[0] === this.props.event.title.replace(/ /g,'') && splitEvent[1] === String(this.props.event.startDate.seconds)) {
                 return splitEvent[2].toString()
             }
         }
@@ -94,9 +98,10 @@ class EventCard extends Component {
                     this.setState({activeCalendar: this.state.calendars[i].title})
                     var calendarID = this.state.calendars[i].id.toString();
                     await Calendar.createEventAsync(String(calendarID), eventDetails)
-                    .then((id) => {this.props.incrementSocialCount(this.props.event.key); this.setState({numPeopleGoing: this.state.numPeopleGoing++}); AsyncStorage.getItem('addedEvents')
-                    .then(arr => {if(arr !== null) {addedEvents = JSON.stringify(JSON.parse(arr).push(this.props.event.title + ' ' + this.props.event.startDate.seconds + ' ' + id)); AsyncStorage.setItem('addedEvents', addedEvents).then(this.setState({eventAdded: true}))} else {AsyncStorage.setItem('addedEvents', JSON.stringify([`${this.props.event.title} ${this.props.event.startDate.seconds} ${id}`])).then(this.setState({eventAdded: true}))}})})
+                    .then((id) => {this.props.incrementSocialCount(this.props.event.key); this.setState({numPeopleGoing: this.state.numPeopleGoing + 1}); AsyncStorage.getItem('addedEvents')
+                    .then(arr => {if(arr !== null && arr !== undefined) {addedEvents = JSON.parse(arr); addedEvents.push(this.props.event.title.replace(/ /g,'') + ' ' + this.props.event.startDate.seconds + ' ' + id); AsyncStorage.setItem('addedEvents', JSON.stringify(addedEvents)).then(this.setState({eventAdded: true}))} else {AsyncStorage.setItem('addedEvents', JSON.stringify([`${this.props.event.title.replace(/ /g,'')} ${this.props.event.startDate.seconds} ${id}`])).then(this.setState({eventAdded: true}))}})})
                     .catch(err => console.log(err))
+                    
                     // ExpoCalendar.createEventAsync(calendar, details)
                     // console.log(details)
                 } 
