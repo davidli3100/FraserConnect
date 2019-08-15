@@ -30,7 +30,6 @@ const firebaseConfig = {
 if(!firebase.apps.length){
   firebase.initializeApp(firebaseConfig);
   var db = firebase.firestore();
-  firebase.firestore().enablePersistence()
 }
 var announcementsRef = db.collection("announcements");
 var statisticsRef = db.collection("statistics");
