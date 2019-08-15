@@ -32,6 +32,7 @@ const firebaseConfig = {
 
 if(!firebase.apps.length){
   firebase.initializeApp(firebaseConfig);
+  firebase.firestore().enablePersistence()
 }
 
 var db = firebase.firestore();
@@ -53,6 +54,15 @@ class Events extends Component {
     this._hydrateEvents()
   }
 
+  _dataReducer = (doc) => {
+    const reduced = {
+      key: doc.id,
+      ...doc.data()
+    }
+
+    return reduced
+  }
+
   _hydrateEvents = async () => {
     this.setState({
       refreshing: true
@@ -60,14 +70,18 @@ class Events extends Component {
     //get the first 10 announcements in the feed (desc order)
     data = await eventsRef.where("endDate", ">=", firebase.firestore.Timestamp.now()).orderBy("endDate").limit(8).get().catch(err => console.log(err))
     this.setState({
-      events: data.docs.map(doc => doc.data()),
+      events: data.docs.map(doc => this._dataReducer(doc)),
       refreshing: false
     })
   }
 
+  addSocialCount = (id) => {
+    eventsRef.doc(id).update({numPeopleGoing: firebase.firestore.FieldValue.increment(1)})
+  }
+
   renderEventCard = (props) => {
     return (
-      <EventCard event={props.item}/>
+      <EventCard incrementSocialCount={this.addSocialCount} event={props.item}/>
     )
   }
 
@@ -91,7 +105,6 @@ class Events extends Component {
           renderItem={this.renderEventCard}
           data={this.state.events}
           refreshing={this.state.refreshing}
-          keyExtractor={(item, index) => item.title + item.poster + new Date().setTime(item.endDate.seconds*1000).toString()}
           />
         </View>
       </View>

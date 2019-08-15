@@ -1,6 +1,6 @@
 //import liraries
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Platform } from 'react-native';
+import { View, Text, StyleSheet, Platform, AsyncStorage } from 'react-native';
 import { heightPercentageToDP, widthPercentageToDP } from '../../constants/Normalize';
 import { Button } from 'react-native-elements';
 import * as Calendar from 'expo-calendar'
@@ -14,9 +14,48 @@ class EventCard extends Component {
         this.state = {
             calendars: [],
             haveCalendarPermissions: false,
-            activeCalendar: null
+            activeCalendar: null,
+            eventAdded: false,
+            addedEvents: null,
+            addedEventID: null,
+            numPeopleGoing: this.props.event.numPeopleGoing
         }
     }
+
+    componentDidMount() { 
+        console.log('remount')
+        //uncomment for master reset :/
+        // AsyncStorage.removeItem('addedEvents')
+        // Calendar.deleteCalendarAsync('34')
+        AsyncStorage.getItem('addedEvents').then(res => {
+            console.log(res)
+            this.setState({
+                addedEvents: JSON.parse(res),
+                addedEventID: this.customIDCheck(JSON.parse(res)),
+                eventAdded: this.customEventCheck(JSON.parse(res))
+            })
+        })
+    }
+
+    customEventCheck = (events) => {
+        for (var i =0; i < events.length; i++) {
+            splitEvent = events[i].split(" ")
+            if(splitEvent[0] === this.props.event.title && splitEvent[1] === String(this.props.event.startDate.seconds)) {
+                this.setState({eventIndex: i})
+                return true
+            }
+        }
+    }
+
+    customIDCheck = (events) => {
+        for (var i =0; i < events.length; i++) {
+            splitEvent = events[i].split(" ")
+            if(splitEvent[0] === this.props.event.title && splitEvent[1] === String(this.props.event.startDate.seconds)) {
+                return splitEvent[2].toString()
+            }
+        }
+    }
+
 
     askForCalendarPermissions = async () => {
         const response = await Permissions.askAsync(Permissions.CALENDAR);
@@ -36,29 +75,40 @@ class EventCard extends Component {
       }
 
     addEventToCalendar = async () => {
-        Calendar.deleteCalendarAsync("35")
+        console.log(this.state)
         event = this.props.event
-        await this._findCalendars()
         // console.log(this.state)
-        for(var i = 0; i < this.state.calendars.length; i++) {
-            // console.log(this.state.calendars[i].ownerAccount)
-            if(this.state.calendars[i].title === "John Fraser SS Events") {
-                eventDetails = {
-                    title: event.title,
-                    startDate: new Date(event.startDate.seconds*1000),
-                    endDate: new Date(event.endDate.seconds*1000),
-                    location: event.location,
-                    id: event.title + ' ' + event.startDate.seconds,
-                    alarms: [{relativeOffset: -30, method: "alert"}]
-                }
-                this.setState({activeCalendar: this.state.calendars[i].title})
-                var calendarID = this.state.calendars[i].id.toString()
-                await Calendar.createEventAsync(String(calendarID), eventDetails).catch(err => console.log(err))
-                // ExpoCalendar.createEventAsync(calendar, details)
-                // console.log(details)
+        if(this.state.eventAdded === false) {
+            await this._findCalendars()
+            for(var i = 0; i < this.state.calendars.length; i++) {
+                // console.log(this.state.calendars[i].ownerAccount)
+                if(this.state.calendars[i].title === "John Fraser SS Events") {
+                    eventDetails = {
+                        title: event.title,
+                        startDate: new Date(event.startDate.seconds*1000),
+                        endDate: new Date(event.endDate.seconds*1000),
+                        location: event.location,
+                        id: event.title + ' ' + event.startDate.seconds,
+                        // alarms: [{relativeOffset: -30, method: "alert"}]
+                    }
+                    this.setState({activeCalendar: this.state.calendars[i].title})
+                    var calendarID = this.state.calendars[i].id.toString();
+                    await Calendar.createEventAsync(String(calendarID), eventDetails)
+                    .then((id) => {this.props.incrementSocialCount(this.props.event.key); this.setState({numPeopleGoing: this.state.numPeopleGoing++}); AsyncStorage.getItem('addedEvents')
+                    .then(arr => {if(arr !== null) {addedEvents = JSON.stringify(JSON.parse(arr).push(this.props.event.title + ' ' + this.props.event.startDate.seconds + ' ' + id)); AsyncStorage.setItem('addedEvents', addedEvents).then(this.setState({eventAdded: true}))} else {AsyncStorage.setItem('addedEvents', JSON.stringify([`${this.props.event.title} ${this.props.event.startDate.seconds} ${id}`])).then(this.setState({eventAdded: true}))}})})
+                    .catch(err => console.log(err))
+                    // ExpoCalendar.createEventAsync(calendar, details)
+                    // console.log(details)
+                } 
             }
+        } else if (this.state.eventAdded) {
+            // Calendar.deleteEventAsync(String(this.state.addedEventID))
+            // AsyncStorage.getItem('addedEvents').then(events => {
+            //     console.log(events)
+            //     AsyncStorage.setItem('addedEvents', JSON.stringify(JSON.parse(events).splice(this.state.eventIndex, 1))).then(this.setState({eventAdded: false}));
+            // })
         }
-        if(this.state.activeCalendar !== "John Fraser SS Events") {
+        if(this.state.activeCalendar !== "John Fraser SS Events" && this.state.eventAdded === false) {
             calendarDetails = {
                 id: "John Fraser SS Events",
                 title: "John Fraser SS Events",
@@ -142,7 +192,8 @@ class EventCard extends Component {
             <View style={styles.container}>
                 <View style={styles.headerContainer}>
                     <Text style={styles.textPoster}>{this.props.event.club}</Text>
-                    <Button title="Add to Calendar" onPress={this.addEventToCalendar} titleStyle={styles.calendarButtonText} buttonStyle={styles.calendarButton}>
+                    <Button title={this.state.eventAdded ? "Event Added" : "Add to Calendar"} disabled={this.state.eventAdded}
+                            onPress={this.addEventToCalendar} titleStyle={styles.calendarButtonText} buttonStyle={styles.calendarButton}>
                         Add to Calendar
                     </Button>
                 </View>
@@ -158,7 +209,7 @@ class EventCard extends Component {
                     </Text>
                     <View style={styles.socialContainer}>
                         <Text style={styles.numberPeople}>
-                            +{this.props.event.numPeopleGoing}
+                            +{this.state.numPeopleGoing}
                         </Text>
                         <Text style={styles.numberPeopleText}>
                             people are going
@@ -215,7 +266,7 @@ const styles = StyleSheet.create({
         height: heightPercentageToDP('4%'),
         backgroundColor: "#0063E7",
         borderRadius: 10,
-        width: widthPercentageToDP('34%')
+        width: widthPercentageToDP('32%')
     },
     calendarButtonText: {
         fontSize: heightPercentageToDP("1.6%"),

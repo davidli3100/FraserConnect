@@ -12,6 +12,7 @@ import {Button} from 'react-native-elements'
 import { default as Text } from "../components/Text";
 import * as GoogleSignIn from "expo-google-sign-in";
 import * as firebase from "firebase";
+import 'firebase/firestore'
 import {
   apiKey,
   appId,
@@ -37,6 +38,7 @@ const firebaseConfig = {
 
 if(!firebase.apps.length){
   firebase.initializeApp(firebaseConfig);
+  firebase.firestore().enablePersistence()
 }
 
 export default class LoginScreen extends Component {
