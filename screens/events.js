@@ -1,13 +1,12 @@
 //import liraries
 import React, { Component } from "react";
-import { View, StyleSheet, Platform, StatusBar, Text } from "react-native";
+import { View, StyleSheet, Platform, StatusBar, Text, FlatList } from "react-native";
 import Header from "../components/global/Header";
 import {
   widthPercentageToDP,
   heightPercentageToDP
 } from "../constants/Normalize";
 import EventCard from "../components/events/eventCard";
-import { FlatList } from "react-native-gesture-handler";
 import * as firebase from 'firebase'
 import 'firebase/firestore'
 import {
@@ -66,8 +65,8 @@ class Events extends Component {
     this.setState({
       refreshing: true
     })
-    //get the first 10 announcements in the feed (desc order)
-    data = await eventsRef.where("endDate", ">=", firebase.firestore.Timestamp.now()).orderBy("endDate").limit(8).get().catch(err => console.log(err))
+    //get the first 6 announcements in the feed (desc order)
+    data = await eventsRef.where("endDate", ">=", firebase.firestore.Timestamp.now()).orderBy("endDate").limit(6).get().catch(err => console.log(err))
     this.setState({
       events: data.docs.map(doc => this._dataReducer(doc)),
       refreshing: false
@@ -99,6 +98,9 @@ class Events extends Component {
             Upcoming Events
           </Text>
           <FlatList
+          onRefresh={() => {this._hydrateEvents()}}
+          // onEndReached={() => {this._getInfinityScrollFeed()}}
+          // onEndReachedThreshold={0.4}          
           ItemSeparatorComponent={this.returnSeparator}
           style={styles.flatList}
           renderItem={this.renderEventCard}
@@ -149,7 +151,10 @@ const styles = StyleSheet.create({
     width: widthPercentageToDP('100%'),
     marginTop: heightPercentageToDP('2%'),
     marginBottom: heightPercentageToDP('2%')
-  }
+  },
+  flatList: {
+    marginBottom: heightPercentageToDP('6%')
+  },
 });
 
 //make this component available to the app
