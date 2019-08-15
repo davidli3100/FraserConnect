@@ -23,12 +23,12 @@ class EventCard extends Component {
     }
 
     componentDidMount() { 
-        console.log('remount')
+        // console.log('remount')
         // uncomment for master reset of calendar :/
         // AsyncStorage.removeItem('addedEvents')
         // Calendar.deleteCalendarAsync('34')
         AsyncStorage.getItem('addedEvents').then(res => {
-            console.log(res)
+            // console.log(res)
             this.setState({
                 addedEvents: JSON.parse(res),
                 addedEventID: this.customIDCheck(JSON.parse(res)),
