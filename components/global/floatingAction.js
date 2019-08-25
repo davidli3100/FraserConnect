@@ -30,7 +30,7 @@ class FloatingActionButton extends Component {
             actions={this.actions}
             distanceToEdge={widthPercentageToDP('5%')}
             onPressItem={name => {
-              console.log(`selected button: ${name}`);
+            //   this.props.navigation.navigate(name)
             }}
             shadow={{ shadowOpacity: 0.35, shadowOffset: { width: 0, height: 5 }, shadowColor: "#102A43", shadowRadius: 3, elevation: 2 }}
           />

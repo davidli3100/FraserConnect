@@ -29,9 +29,9 @@ class EventCard extends Component {
                 </Text>
                 <View style={styles.detailsView}>
                     <Text style={styles.dateText}>
-                        at {this.props.data.eventDate} in{"\u0020"}
+                        at {this.props.data.startDate.seconds} in{"\u0020"}
                         <Text style={styles.locationText}>
-                            {this.props.data.eventLocation}
+                            {this.props.data.location}
                         </Text>
                     </Text>
 
@@ -49,6 +49,7 @@ const styles = StyleSheet.create({
         paddingTop: heightPercentageToDP('1.5%'),
         paddingBottom: heightPercentageToDP('1.5%'),
         marginLeft: widthPercentageToDP('4.5%'),
+        marginTop: heightPercentageToDP('2%'),
         flex: 1,
         justifyContent: 'center',
         alignItems: 'flex-start',

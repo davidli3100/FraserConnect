@@ -33,6 +33,7 @@ if(!firebase.apps.length){
   var db = firebase.firestore();
 }
 var announcementsRef = db.collection("announcements");
+var eventsRef = db.collection("events");
 var statisticsRef = db.collection("statistics");
 
 export default class FeedScreen extends Component {
@@ -48,8 +49,25 @@ export default class FeedScreen extends Component {
   componentDidMount() {
     this._hydrateUserState();
     this._hydrateInitialFeed();
+    this._hydrateEventsFeed();
   }
 
+  _dataReducer = (doc) => {
+    const reduced = {
+      key: doc.id,
+      ...doc.data()
+    }
+
+    return reduced
+  }
+  
+  _hydrateEventsFeed = async () => {
+    //get the first 6 announcements in the feed (desc order)
+    data = await eventsRef.where("startDate", ">=", firebase.firestore.Timestamp.now()).orderBy("startDate").limit(6).get().catch(err => console.log(err))
+    this.setState({
+      events: data.docs.map(doc => this._dataReducer(doc)),
+    })
+  }
 
     renderFeedCard = (props) => {
       return (
@@ -57,12 +75,13 @@ export default class FeedScreen extends Component {
       )
     }
 
+
     render() {
       return (
       <SafeAreaView forceInset={{ bottom: 'never' }}>
         <View style={styles.container}>
             <Header headerDescription="Here are today's events"/>
-            <Events/>
+            <Events refresh={this._hydrateEventsFeed} data={this.state.events}/>
             <View style={styles.flatListContainer}>
               <Text style={styles.feedHeader}>
                 Announcements

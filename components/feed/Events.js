@@ -8,6 +8,13 @@ import { FlatList } from 'react-native';
 // create a component
 class Events extends Component {
 
+    constructor(props) {
+        super(props)
+        this.state = {
+            refreshing: false
+        }
+    }
+
     renderEventCard = (props) => {
         return (
           <EventCard data={props.item} index={props.index}/>
@@ -19,11 +26,14 @@ class Events extends Component {
             <FlatList
                 showsHorizontalScrollIndicator={false}
                 horizontal={true}
+                // contentContainerStyle={{alignItems:'center'}}
+                onRefresh={() => {this.props.refresh()}}
+                refreshing={this.state.refreshing}
                 ListFooterComponent={<View style={{marginRight: heightPercentageToDP('4.5%')}}></View>}
                 style={styles.container}
-                data={[{club: "Student Activity Council", title: "Summer Carnival", eventDate: "11am", eventLocation: "the courtyard"}, {club: "Student Activity Council", title: "Summer Carnival", eventDate: "11am", eventLocation: "the courtyard"}, {club: "Student Activity Council", title: "Summer Carnival", eventDate: "11am", eventLocation: "the courtyard"}, {club: "Student Activity Council", title: "Summer Carnival", eventDate: "11am", eventLocation: "the courtyard"}, {club: "Student Activity Council", title: "Summer Carnival", eventDate: "11am", eventLocation: "the courtyard"}, {club: "Student Activity Council", title: "Summer Carnival", eventDate: "11am", eventLocation: "the courtyard"} ]}
+                data={this.props.data}
                 renderItem={this.renderEventCard}
-                keyExtractor={(item, index) => item.title + ' ' + item.club + ' ' + item.eventDate + ' ' + index}
+                // keyExtractor={(item, index) => item.title + ' ' + item.club + ' ' + item.startDate.seconds + ' ' + index}
             />
         );
     }
@@ -33,12 +43,12 @@ class Events extends Component {
 const styles = StyleSheet.create({
     container: {
         paddingTop: heightPercentageToDP('2%'),
-        paddingBottom: heightPercentageToDP('2%'),
+        // paddingBottom: heightPercentageToDP('2%'),
         flex: 1,
         backgroundColor: '#fff',
         maxHeight: heightPercentageToDP('22%'),
         width: widthPercentageToDP('100%'),
-        overflow: 'scroll'
+        overflow: 'scroll',
     },
 });
 
