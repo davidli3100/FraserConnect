@@ -10,16 +10,28 @@ import { widthPercentageToDP, heightPercentageToDP } from '../../constants/Norma
 class FloatingActionButton extends Component {
     actions = [
         {
-          text: "Accessibility",
-          icon: <Feather color="rgba(255,255,255,0.9)" size={20} name="home"/>,
-          name: "bt_accessibility",
-          position: 2
+          text: "Announcement",
+          icon: <Feather color="rgba(255,255,255,0.9)" size={20} name="message-square"/>,
+          name: "createAnnouncement",
+          position: 1,
+          color:"#102A43",
+          textColor: "#102A43",
         },
         {
-          text: "Language",
-          icon: <Feather color="rgba(255,255,255,0.9)" size={20} name="home"/>,
-          name: "bt_language",
-          position: 1
+          text: "Event",
+          icon: <Feather color="rgba(255,255,255,0.9)" size={20} name="calendar"/>,
+          name: "createEvent",
+          position: 2,
+          color:"#102A43",
+          textColor: "#102A43",
+        },
+        {
+          text: "Election",
+          icon: <Feather color="rgba(255,255,255,0.9)" size={20} name="send"/>,
+          name: "createElection",
+          position: 3,
+          color:"#102A43",
+          textColor: "#102A43",
         }
       ];
 
