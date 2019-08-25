@@ -160,31 +160,47 @@ class EventCard extends Component {
             minutes2 = "0" + minutes2
         }  
 
+
         if(hours >= 13 && hours !== 12) {
+            console.log(1)
             var finalStartDate = dateString + ' ' + hours-12+':'+ minutes + ' ' + 'p.m.' 
         } else if (hours === 12) {
+            console.log(2)
             var finalStartDate = dateString + ' ' + hours + ':' + minutes + ' ' + 'p.m.'
+        } else if (hours === 0) {
+            console.log(3)
+            var finalStartDate = dateString + ' ' + 12 + ':' + minutes + ' ' + 'a.m.'
         } else {
+            console.log(4)
             var finalStartDate = dateString + ' ' + hours + ':' + minutes + ' ' + 'a.m.'
         }
 
-        if(hours2 >= 13 && hours2 !== 12) {
+        if(hours2 >= 13 && hours2 !== 12 && dateString !== dateString2) {
+            console.log(5)
             var finalStartDate2 = dateString2 + ' ' + hours2-12+':'+ minutes2 + ' ' + 'p.m.' 
         } else if (dateString2 === dateString && hours2 === 12) {
+            console.log(6)
             var finalStartDate2 = hours2 + ':' + minutes2 + ' ' + 'p.m.'
             sameDay = true
         } else if(hours2 >= 13 && hours2 !== 12 && dateString === dateString2) {
+            console.log(7)
             var finalStartDate2 = hours2-12+':'+ minutes2 + ' ' + 'p.m.' 
             sameDay = true
         } else if(hours2 < 13 && dateString === dateString2) {
+            console.log(8)
             var finalStartDate2 = hours2 +':'+ minutes2 + ' ' + 'a.m.' 
             sameDay = true
         } else if (hours2 === 12) {
+            console.log(9)
             var finalStartDate2 = dateString2 + ' ' + hours2 + ':' + minutes2 + ' ' + 'p.m.'
         } else {
+            console.log(10)
             var finalStartDate2 = dateString2 + ' ' + hours2 + ':' + minutes2 + ' ' + 'a.m.'
         }
         
+        // console.log(dateString)
+        // console.log(hours2)
+
         if(sameDay) {
             return finalStartDate + ' - '+ finalStartDate2
         } else {

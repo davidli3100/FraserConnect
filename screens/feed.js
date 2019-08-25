@@ -16,6 +16,7 @@ import {
   projectId
 } from "../constants/firebaseConfig";
 import Events from '../components/feed/Events';
+import FloatingActionButton from '../components/global/floatingAction';
 
 const firebaseConfig = {
   apiKey: apiKey,
@@ -80,6 +81,7 @@ export default class FeedScreen extends Component {
                 keyExtractor={(item, index) => item.title + item.poster + new Date().setTime(item.datePosted.seconds*1000).toString()}
               />
             </View>
+            <FloatingActionButton/>
         </View>
       </SafeAreaView>
       );
