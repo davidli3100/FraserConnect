@@ -11,13 +11,13 @@ class FloatingActionButton extends Component {
     actions = [
         {
           text: "Accessibility",
-          icon: <Feather name="home"/>,
+          icon: <Feather color="white" size={25} name="home"/>,
           name: "bt_accessibility",
           position: 2
         },
         {
           text: "Language",
-          icon: <Feather name="home"/>,
+          icon: <Feather color="white" size={25} name="home"/>,
           name: "bt_language",
           position: 1
         }

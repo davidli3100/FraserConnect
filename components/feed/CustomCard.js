@@ -122,7 +122,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 3,
     elevation: 4,
-    borderRadius: 14,
+    borderBottomLeftRadius: 14,
+    borderTopLeftRadius: 14,
     backgroundColor: '#fff',
     paddingTop: heightPercentageToDP('2%'),
     paddingBottom: heightPercentageToDP('1.9%'),
@@ -174,7 +175,7 @@ const styles = StyleSheet.create({
   },
   contentText: {
     fontFamily: "Poppins-Medium",
-    fontSize: heightPercentageToDP("1.35%"),
+    fontSize: heightPercentageToDP("1.5%"),
     color: '#102A43'
   },
   contentContainer: {
