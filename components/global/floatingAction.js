@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import {FloatingAction} from 'react-native-floating-action'
 import { Feather } from "@expo/vector-icons";
-import { widthPercentageToDP } from '../../constants/Normalize';
+import { widthPercentageToDP, heightPercentageToDP } from '../../constants/Normalize';
 
 
 // create a component
@@ -11,13 +11,13 @@ class FloatingActionButton extends Component {
     actions = [
         {
           text: "Accessibility",
-          icon: <Feather color="white" size={25} name="home"/>,
+          icon: <Feather color="rgba(255,255,255,0.9)" size={20} name="home"/>,
           name: "bt_accessibility",
           position: 2
         },
         {
           text: "Language",
-          icon: <Feather color="white" size={25} name="home"/>,
+          icon: <Feather color="rgba(255,255,255,0.9)" size={20} name="home"/>,
           name: "bt_language",
           position: 1
         }
@@ -28,11 +28,11 @@ class FloatingActionButton extends Component {
             <FloatingAction
             color="#102A43"
             actions={this.actions}
-            distanceToEdge={widthPercentageToDP('5%')}
+            distanceToEdge={widthPercentageToDP('4.5%')}
             onPressItem={name => {
             //   this.props.navigation.navigate(name)
             }}
-            shadow={{ shadowOpacity: 0.35, shadowOffset: { width: 0, height: 5 }, shadowColor: "#102A43", shadowRadius: 3, elevation: 2 }}
+            shadow={{ shadowOpacity: 0.35, shadowOffset: { width: 0, height: 5 }, shadowColor: "#102A43", shadowRadius: 3, elevation: 5 }}
           />
         );
     }

@@ -1,6 +1,6 @@
 //import liraries
 import React, { Component } from "react";
-import { View, StyleSheet, Platform, StatusBar, Text, FlatList } from "react-native";
+import { View, StyleSheet, Platform, StatusBar, Text, FlatList, SafeAreaView } from "react-native";
 import Header from "../components/global/Header";
 import {
   widthPercentageToDP,
@@ -18,6 +18,7 @@ import {
   databaseURL,
   projectId
 } from "../constants/firebaseConfig";
+import FloatingActionButton from "../components/global/floatingAction";
 
 const firebaseConfig = {
   apiKey: apiKey,
@@ -91,24 +92,27 @@ class Events extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <Header headerDescription="Here's what's happening at Fraser"/>
-        <View style={styles.eventsContainer}>
-          <Text style={styles.headingText}>
-            Upcoming Events
-          </Text>
-          <FlatList
-          onRefresh={() => {this._hydrateEvents()}}
-          // onEndReached={() => {this._getInfinityScrollFeed()}}
-          // onEndReachedThreshold={0.4}          
-          ItemSeparatorComponent={this.returnSeparator}
-          style={styles.flatList}
-          renderItem={this.renderEventCard}
-          data={this.state.events}
-          refreshing={this.state.refreshing}
-          />
+      <SafeAreaView forceInset={{ bottom: 'never' }}>
+        <View style={styles.container}>
+          <Header headerDescription="Here's what's happening at Fraser"/>
+          <View style={styles.eventsContainer}>
+            <Text style={styles.headingText}>
+              Upcoming Events
+            </Text>
+            <FlatList
+            onRefresh={() => {this._hydrateEvents()}}
+            // onEndReached={() => {this._getInfinityScrollFeed()}}
+            // onEndReachedThreshold={0.4}          
+            ItemSeparatorComponent={this.returnSeparator}
+            style={styles.flatList}
+            renderItem={this.renderEventCard}
+            data={this.state.events}
+            refreshing={this.state.refreshing}
+            />
+          </View>
+          <FloatingActionButton/>
         </View>
-      </View>
+      </SafeAreaView>
     );
   }
 }
