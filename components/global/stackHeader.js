@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     container: {
         paddingLeft: widthPercentageToDP('4.5%'),
         paddingRight: widthPercentageToDP('4.5%'),
-        flex: 1,
+        // flex: 1,
         justifyContent: 'flex-start',
         alignItems: 'center',
         backgroundColor: '#0063e7',

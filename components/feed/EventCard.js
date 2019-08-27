@@ -18,6 +18,23 @@ _colourHandler = (key) => {
 
 class EventCard extends Component {
 
+    _convertToHours = (startDate) => {
+        var jDate = new Date(startDate*1000)
+        var hours = jDate.getHours();
+        var minutes = jDate.getMinutes()
+        if(minutes < 10) {
+            minutes = "0" + minutes
+        }
+
+        if(hours > 12) {
+            return hours-12 + ':' + minutes + ' pm'
+        } else if (hours === 12) {
+            return hours + ":" + minutes + ' pm'
+        } else {
+            return hours + ":" + minutes + ' am'
+        }
+    }
+
     render() {
         return (
             <View style={StyleSheet.flatten([styles.container, {backgroundColor: _colourHandler(this.props.index)}])}>
@@ -29,7 +46,7 @@ class EventCard extends Component {
                 </Text>
                 <View style={styles.detailsView}>
                     <Text style={styles.dateText}>
-                        at {this.props.data.startDate.seconds} in{"\u0020"}
+                        at {this._convertToHours(this.props.data.startDate.seconds)} in{"\u0020"}
                         <Text style={styles.locationText}>
                             {this.props.data.location}
                         </Text>
