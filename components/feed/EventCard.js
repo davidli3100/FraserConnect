@@ -24,7 +24,7 @@ class EventCard extends Component {
                 <Text style={styles.clubText}>
                     {this.props.data.club}
                 </Text> 
-                <Text style={styles.titleText}>
+                <Text numberOfLines={2} ellipsizeMode="tail" style={styles.titleText}>
                     {this.props.data.title}
                 </Text>
                 <View style={styles.detailsView}>

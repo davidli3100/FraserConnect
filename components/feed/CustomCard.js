@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, View, AsyncStorage, Text } from "react-native";
+import { StyleSheet, View, AsyncStorage, Text, TouchableOpacity } from "react-native";
 // import { default as Text } from "../Text";
 import { Avatar, Image, Icon, ThemeConsumer } from "react-native-elements";
 import {
@@ -86,6 +86,11 @@ class CardContent extends Component {
 
 export default class FeedCard extends Component {
 
+  constructor(props) {
+    super(props)
+    this._navigateToAnnouncement = this._navigateToAnnouncement.bind(this)
+  }
+
   _convertSecondsToDate = (seconds) => {
     var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
     var date = new Date(seconds*1000) //convert to milliseconds
@@ -95,20 +100,28 @@ export default class FeedCard extends Component {
     return months[month] + " " + day
   }
 
+  _navigateToAnnouncement = () => {
+    this.props.navigation.navigate('Announcement', {
+      post: this.props.post
+    })
+  }
+
   render() {
     return (
-      <View style={styles.container}>
-        <CardHeader
-          datePosted={this._convertSecondsToDate(this.props.post.datePosted.seconds)}
-          poster={this.props.post.poster}
-          posterPhoto={this.props.post.posterPhoto}
-        />
-        <CardContent
-          title={this.props.post.title}
-          cardContent={this.props.post.content}
-          imageURIs={this.props.post.imageURIs}
-        />
-      </View>
+      <TouchableOpacity onPress={this._navigateToAnnouncement}>
+        <View style={styles.container}>
+          <CardHeader
+            datePosted={this._convertSecondsToDate(this.props.post.datePosted.seconds)}
+            poster={this.props.post.poster}
+            posterPhoto={this.props.post.posterPhoto}
+          />
+          <CardContent
+            title={this.props.post.title}
+            cardContent={this.props.post.content}
+            imageURIs={this.props.post.imageURIs}
+          />
+        </View>
+      </TouchableOpacity>
     );
   }
 }

@@ -71,7 +71,7 @@ export default class FeedScreen extends Component {
 
     renderFeedCard = (props) => {
       return (
-        <FeedCard post={props.item}/>
+        <FeedCard navigation={this.props.navigation} post={props.item}/>
       )
     }
 

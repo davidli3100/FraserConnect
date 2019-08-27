@@ -1,13 +1,14 @@
 import React from "react";
-import { createAppContainer, createBottomTabNavigator } from "react-navigation";
+import { createAppContainer, createBottomTabNavigator, createStackNavigator } from "react-navigation";
 import { Feather } from "@expo/vector-icons";
 import { heightPercentageToDP } from "../constants/Normalize";
 import FeedScreen from "../screens/feed";
 import VotingScreen from "../screens/voting";
 import EventsScreen from "../screens/events";
 import { colors } from "../constants/theme";
+import Announcement from '../screens/announcement'
 
-export default Tabs = createBottomTabNavigator(
+const Tabs = createBottomTabNavigator(
   
     {
     Home: FeedScreen,
@@ -52,4 +53,16 @@ export default Tabs = createBottomTabNavigator(
     }
   }
 );
+
+export default StackedTabs = createStackNavigator({
+  Main: Tabs,
+  Announcement: Announcement,
+},
+{
+  headerMode: 'none',
+  navigationOptions: {
+    headerVisible: false,
+  }
+ }
+)
 //   export default createAppContainer(TabNavigatorScreen);
