@@ -13,8 +13,8 @@ class StackHeader extends Component {
                     <Feather name="arrow-left" color="white" size={30}/>
                 </TouchableOpacity>
                 <View style={styles.textContainer}>
-                    <Text>{this.props.title}</Text>
-                    <Text>{this.props.poster}</Text>
+                    <Text style={styles.title}>{this.props.title}</Text>
+                    <Text style={styles.poster}>{this.props.poster}</Text>
                 </View>
             </View>
         );
@@ -33,11 +33,26 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         borderBottomLeftRadius: 40,
         width: widthPercentageToDP('100%'),
-        height: heightPercentageToDP('20%')
+        height: heightPercentageToDP('18%')
     },
     textContainer: {
-        marginLeft: 'auto',
-        width: widthPercentageToDP('70%')
+        marginLeft: widthPercentageToDP('5.2%'),
+        width: widthPercentageToDP('70%'),
+        // marginBottom: heightPercentageToDP('2%')
+    },
+    backButton: {
+        marginBottom: heightPercentageToDP('2.8%')
+    },
+    title: {
+        fontFamily: "Poppins-SemiBold",
+        fontSize: heightPercentageToDP('3%'),
+        color: "#fff",
+        lineHeight: heightPercentageToDP('3.2%')
+    },
+    poster: {
+        fontFamily: "Poppins-SemiBold",
+        fontSize: heightPercentageToDP('1.7%'),
+        color: 'rgba(255,255,255,0.9)'
     }
 });
 
