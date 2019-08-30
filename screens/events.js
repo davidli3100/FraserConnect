@@ -121,7 +121,7 @@ class Events extends Component {
 // define your styles
 const styles = StyleSheet.create({
   container: {
-    paddingTop: Platform.OS === "ios" ? 0 : StatusBar.currentHeight,
+    paddingTop: StatusBar.currentHeight,
     backgroundColor: "#ffffff",
     height: heightPercentageToDP('100%'),
     display: 'flex',

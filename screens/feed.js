@@ -219,7 +219,7 @@ export default class FeedScreen extends Component {
 
   const styles = StyleSheet.create({
     container: {
-      paddingTop: Platform.OS === 'ios' ? 0 : StatusBar.currentHeight,
+      paddingTop: StatusBar.currentHeight,
       height: heightPercentageToDP('100%'),
       backgroundColor: '#F0F4F8',
     },
