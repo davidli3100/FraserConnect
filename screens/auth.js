@@ -186,8 +186,8 @@ export default class LoginScreen extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: StatusBar.currentHeight + heightPercentageToDP('13.5%'),
-    flex: 1,
+    paddingTop: Platform.OS === 'ios' ? 0 + heightPercentageToDP('13.5%') : StatusBar.currentHeight + heightPercentageToDP('13.5%'),
+    flex: 1,s
     flexDirection: 'column',
     backgroundColor: "#fff",
     alignItems: "center",
