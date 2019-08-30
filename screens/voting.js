@@ -11,6 +11,7 @@ export default class VotingScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
+      <StatusBar backgroundColor="#fff" barStyle="dark-content"/>
         <Header screenName="Voting" />
         <Text h1>Voting Screen</Text>
       </View>

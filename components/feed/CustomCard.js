@@ -108,7 +108,7 @@ export default class FeedCard extends Component {
 
   render() {
     return (
-      <TouchableOpacity activeOpacity={0.75} onPress={this.props.post.content ? this._navigateToAnnouncement : null}>
+      <TouchableOpacity activeOpacity={this.props.post.content ? 0.75 : 1} onPress={this.props.post.content ? this._navigateToAnnouncement : null}>
         <View style={styles.container}>
           <CardHeader
             datePosted={this._convertSecondsToDate(this.props.post.datePosted.seconds)}

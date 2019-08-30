@@ -122,8 +122,8 @@ export default class LoginScreen extends Component {
 
   logInComponents = () => {
     return (
-      <StatusBar backgroundColor="#fff" barStyle="dark-content"/>
       <View style={styles.container}>
+        <StatusBar backgroundColor="#fff" barStyle="dark-content"/>
         <Text  style={styles.loginHeader}>Welcome,</Text>
         <Text style={styles.loginSubtitle}>sign in to continue</Text>
         <Image
@@ -224,9 +224,9 @@ const styles = StyleSheet.create({
     shadowColor: "#40000000",
     shadowOffset: {
       width: 0,
-      height: 4,
+      height: 2,
     },
-    shadowRadius: 4,
+    shadowRadius: 2.62,
     elevation: 4
 
   },
