@@ -64,7 +64,6 @@ export default class LoginScreen extends Component {
         isOfflineEnabled: false,
         isPromptEnabled: false,
         clientId: "845387999936-7cf7kksvhqa8gcs4489f2e4k61pgb5s5.apps.googleusercontent.com",
-        behaviour: 'web'
       });
     } catch ({ error }) {
       this.setState({isLoggingIn: false})
