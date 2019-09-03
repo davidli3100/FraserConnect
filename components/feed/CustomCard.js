@@ -1,12 +1,33 @@
 import React, { Component } from "react";
-import { StyleSheet, View, AsyncStorage } from "react-native";
-import { default as Text } from "../Text";
+import { StyleSheet, View, AsyncStorage, Text, TouchableOpacity } from "react-native";
+// import { default as Text } from "../Text";
 import { Avatar, Image, Icon, ThemeConsumer } from "react-native-elements";
 import {
   widthPercentageToDP,
   heightPercentageToDP
 } from "../../constants/Normalize";
 import { colors } from "../../constants/theme";
+
+function stringToColor(input_str) {
+  var baseRed = 128;
+  var baseGreen = 128;
+  var baseBlue = 128;
+
+  //lazy seeded random hack to get values from 0 - 256
+  //for seed just take bitwise XOR of first two chars
+  var seed = input_str.charCodeAt(0) ^ input_str.charCodeAt(1);
+  var rand_1 = Math.abs((Math.sin(seed++) * 10000)) % 256;
+  var rand_2 = Math.abs((Math.sin(seed++) * 10000)) % 256;
+  var rand_3 = Math.abs((Math.sin(seed++) * 10000)) % 256;
+
+  //build colour
+  var red = Math.round((rand_1 + baseRed) / 2);
+  var green = Math.round((rand_2 + baseGreen) / 2);
+  var blue = Math.round((rand_3 + baseBlue) / 2);
+
+  return 'rgb(' + red + ',' + green + ',' + blue + ')'
+}
+
 
 class CardHeader extends Component {
   _customInitialsHandler = string => {
@@ -22,16 +43,15 @@ class CardHeader extends Component {
   render() {
     return (
       <View style={styles.headerContainer}>
-        <View style={styles.headerLeft}>
-          {/* <Avatar 
-              overlayContainerStyle={{backgroundColor: colors.blue}}
-              rounded
+        <View style={styles.headerAvatar}>
+          <Avatar 
+              overlayContainerStyle={StyleSheet.flatten([{backgroundColor: stringToColor(this.props.poster)}, styles.avatarStyle])}
               size={heightPercentageToDP('4%')} 
-              title={this.props.poster ? this._customInitialsHandler(this.props.poster) : "John Fraser"} 
-              source={{uri: this.props.posterPhoto}}/> */}
-          <Text style={styles.headerPosterTitle}>{this.props.poster}</Text>
+              title={this._customInitialsHandler(this.props.poster)} 
+              source={{uri: this.props.posterPhoto}}/>
         </View>
-        <View style={styles.headerRight}>
+        <View style={styles.headerPostHeaderText}>
+          <Text style={styles.headerPosterTitle}>{this.props.poster}</Text>
           <Text style={styles.headerLightText}>{this.props.datePosted}</Text>
         </View>
       </View>
@@ -57,65 +77,74 @@ class CardContent extends Component {
     return (
       <View style={styles.contentContainer}>
         <Text style={styles.contentTitle}>{this.props.title}</Text>
-        <Text style={styles.contentText}>{this.props.cardContent}</Text>
-        {this.props.imageURIs && (
-          <CardImages imageURIs={this.props.imageURIs} />
-        )}
-      </View>
-    );
-  }
-}
-
-class CardFooter extends Component {
-  render() {
-    return (
-      <View style={styles.footer}>
-        <Icon
-          name="bookmark"
-          type="feather"
-          onPress={() => {}}
-          size={heightPercentageToDP("2.5%")}
-        />
+        {this.props.cardContent.length > 0 &&
+        <Text numberOfLines={2} ellipsizeMode="tail" style={styles.contentText}>{this.props.cardContent}</Text> }
       </View>
     );
   }
 }
 
 export default class FeedCard extends Component {
+
+  constructor(props) {
+    super(props)
+    this._navigateToAnnouncement = this._navigateToAnnouncement.bind(this)
+  }
+
+  _convertSecondsToDate = (seconds) => {
+    var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    var date = new Date(seconds*1000) //convert to milliseconds
+    day = date.getDate()
+    month = date.getMonth()
+
+    return months[month] + " " + day
+  }
+
+  _navigateToAnnouncement = () => {
+    this.props.navigation.navigate('Announcement', {
+      post: this.props.post
+    })
+  }
+
   render() {
     return (
-      <View style={styles.container}>
-        <CardHeader
-          datePosted={this.props.post.datePosted}
-          poster={this.props.post.poster}
-          posterPhoto={this.props.post.posterPhoto}
-        />
-        <CardContent
-          title={this.props.post.title}
-          cardContent={this.props.post.content}
-          imageURIs={this.props.post.imageURIs}
-        />
-        <CardFooter />
-      </View>
+      <TouchableOpacity activeOpacity={this.props.post.content ? 0.75 : 1} onPress={this.props.post.content ? this._navigateToAnnouncement : null}>
+        <View style={styles.container}>
+          <CardHeader
+            datePosted={this._convertSecondsToDate(this.props.post.datePosted.seconds)}
+            poster={this.props.post.poster}
+            posterPhoto={this.props.post.posterPhoto}
+          />
+          <CardContent
+            title={this.props.post.title}
+            cardContent={this.props.post.content}
+            imageURIs={this.props.post.imageURIs}
+          />
+        </View>
+      </TouchableOpacity>
     );
   }
 }
 const styles = StyleSheet.create({
   container: {
-    shadowColor: colors.shadow,
+    shadowColor: '#000000',
     shadowOffset: {
       width: 0,
-      height: 0
+      height: 4
     },
-    shadowOpacity: 1,
-    shadowRadius: 10,
-    elevation: 2,
-    borderRadius: 13,
-    backgroundColor: "#fff",
-    paddingTop: heightPercentageToDP("2%"),
-    paddingBottom: heightPercentageToDP("2%"),
-    paddingRight: widthPercentageToDP("3%"),
-    paddingLeft: widthPercentageToDP("3%")
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 4,
+    borderBottomLeftRadius: 14,
+    borderTopLeftRadius: 14,
+    backgroundColor: '#fff',
+    paddingTop: heightPercentageToDP('2%'),
+    paddingBottom: heightPercentageToDP('1.9%'),
+    paddingRight: widthPercentageToDP('3%'),
+    paddingLeft: widthPercentageToDP('3%'),
+    marginBottom: heightPercentageToDP('2.85%'),
+    marginLeft: widthPercentageToDP('6%'),
+    marginRight: widthPercentageToDP('-1.5%')
   },
   headerContainer: {
     flex: -1,
@@ -124,50 +153,45 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginBottom: heightPercentageToDP("2%")
   },
-  headerLeft: {
+  headerAvatar: {
     flexDirection: "row",
     alignItems: "center"
   },
-  headerRight: {
-    justifyContent: "flex-end"
+  avatarStyle: {
+    borderRadius: 7,
+    overflow: 'hidden'
+  },
+  headerPostHeaderText:{
+    marginLeft : widthPercentageToDP('2.5%'),
+    flex: 1,
+    flexDirection: 'column'
   },
   headerLightText: {
-    fontFamily: "Rubik-Light",
-    fontSize: heightPercentageToDP("1.8%")
-  },
-  imagesContainer: {
-    display: "flex",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
-    alignContent: "flex-start"
-  },
-  image: {
-    flex: 1,
-    flexGrow: 0,
-    flexBasis: "auto",
-    alignSelf: "auto"
-  },
-  footer: {
-    flexDirection: "row",
-    justifyContent: "flex-end"
+    fontFamily: "Poppins-SemiBold",
+    color: 'rgba(98, 125, 152, 0.7)',
+    lineHeight: heightPercentageToDP('1.6%'),
+    fontSize: heightPercentageToDP("1.5%")
   },
   headerPosterTitle: {
-    // marginLeft : widthPercentageToDP('2.5%'),
-    fontSize: heightPercentageToDP("2.55%"),
-    fontFamily: "Rubik-Bold"
+    fontSize: heightPercentageToDP('2%'),
+    fontFamily: 'Poppins-SemiBold',
+    lineHeight: heightPercentageToDP('2.1%'),
+    color: '#102a43',
+    marginBottom: heightPercentageToDP('0.2%'),
+    marginTop: heightPercentageToDP('0.2%')
   },
   contentTitle: {
-    fontSize: heightPercentageToDP("2.3%"),
-    fontFamily: "Rubik-Medium",
-    marginBottom: heightPercentageToDP("0.5%")
+    fontSize: heightPercentageToDP("1.6%"),
+    fontFamily: "Poppins-SemiBold",
+    // marginBottom: heightPercentageToDP("0.5%"),
+    color: '#102A43'
   },
   contentText: {
-    fontFamily: "Rubik-Light",
-    fontSize: heightPercentageToDP("2%")
+    fontFamily: "Poppins-Medium",
+    fontSize: heightPercentageToDP("1.5%"),
+    color: '#102A43'
   },
   contentContainer: {
-    marginBottom: heightPercentageToDP("1.3%")
+    // marginBottom: heightPercentageToDP("1.3%")
   }
 });

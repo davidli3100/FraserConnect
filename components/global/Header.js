@@ -7,31 +7,44 @@ import {
   heightPercentageToDP
 } from "../../constants/Normalize";
 import * as theme from "../../constants/theme";
-import { Avatar } from "react-native-elements";
-import { withNavigation } from "react-navigation";
+import { withNavigation, createDrawerNavigator } from "react-navigation";
 import * as GoogleSignIn from "expo-google-sign-in";
+import * as firebase from "firebase"
+import CustomMenu from "../dropdown/CustomMenu.js";
 
-// create a component
+
 class Header extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: {}
+      user: {
+        
+      }
     };
-    this._openDrawer = this._openDrawer.bind(this);
+    // this._customInitialsHandler = this._customInitialsHandler.bind(this);
+    // stringToColor = stringToColor.bind(this);
   }
 
   componentDidMount() {
     this._hydrateUserState();
-    // console.log(this.state)
-  }
+ }
 
   _hydrateUserState = async () => {
+    AsyncStorage.getItem("userPicture").then(res => {
+      this.setState((prevState, props) => ({
+        user: {
+          ...prevState.user,
+          userPicture: JSON.parse(res)
+        }
+      }));
+    });
     AsyncStorage.getItem("userName").then(res => {
       this.setState((prevState, props) => ({
         user: {
           ...prevState.user,
-          userName: res
+          userName: res,
+          // userInitials: this._customInitialsHandler(res),
+          // profileColour: stringToColor(res)
         }
       }));
     });
@@ -59,14 +72,6 @@ class Header extends Component {
         }
       }));
     });
-    AsyncStorage.getItem("userPicture").then(res => {
-      this.setState((prevState, props) => ({
-        user: {
-          ...prevState.user,
-          userPicture: res
-        }
-      }));
-    });
     AsyncStorage.getItem("userEmail").then(res => {
       this.setState((prevState, props) => ({
         user: {
@@ -77,64 +82,62 @@ class Header extends Component {
     });
   };
 
-  _customInitialsHandler = string => {
-    var names = string.split(" "),
-      initials = names[0].substring(0, 1).toUpperCase();
-
-    if (names.length > 1) {
-      initials += names[1].substring(0, 1).toUpperCase();
-    }
-    return initials;
-  };
-
-  _openDrawer = () => {
-    this.props.navigation.navigate("DrawerOpen");
-  };
-
   syncDeletes = [
     "uid",
     "userName",
     "userFirstName",
     "userLastName",
     "userEmail",
-    "userPhoto"
+    "userPicture"
   ];
 
-  _asyncLogOut = async () => {
-    try {
-      await GoogleSignIn.signOutAsync();
-      await AsyncStorage.removeItem("user");
-      this.props.navigation.navigate("Auth");
-      // console.log('sign out successful')
-    } catch ({ error }) {
-      console.error("Error in Logging Out: " + error);
-    } finally {
-      await AsyncStorage.multiRemove(this.syncDeletes);
+    _asyncLogOut = async() => {
+        try {
+            await GoogleSignIn.signOutAsync();
+            try {
+              await firebase.auth().signOut();
+            } catch(err) {
+              console.log("Firebase logout err: " + err)
+            }
+            await AsyncStorage.removeItem('user');
+            this.props.navigation.navigate('Auth')
+            // console.log('sign out successful')
+        } catch ({error}) {
+            console.error('Error in Logging Out: ' + error)
+        } finally {
+            await AsyncStorage.multiRemove(this.syncDeletes)
+        }
     }
-  };
 
+    
   render() {
     return (
       <View style={styles.container}>
         <View style={styles.containerLeft}>
-          <Text style={styles.textUpper}>FRASER CONNECT</Text>
-          <Text style={styles.textLower}>{this.props.screenName}</Text>
+          <Text style={styles.textUpper}>Hi {this.state.user.userFirstName},</Text>
+          <Text style={styles.textLower}>{this.props.headerDescription}</Text>
         </View>
         <View>
-          <Avatar
-            overlayContainerStyle={{ backgroundColor: theme.colors.blue }}
-            rounded
-            onPress={() => {
-              this._openDrawer();
+          <CustomMenu
+            menutext="Menu"
+            menustyle={{
+              flexDirection: "row",
+              justifyContent: "flex-end"
+            }}
+            textStyle={{
+              color: "white"
+            }}
+            settingsClick={() => {
+              console.log(this.state.user)
+            }}
+            logoutClick={() => {
               this._asyncLogOut();
             }}
-            size={heightPercentageToDP("5.1%")}
-            title={
-              this.state.user["userName"]
-                ? this._customInitialsHandler(this.state.user["userName"])
-                : "John Fraser"
-            }
-            source={{ uri: this.state.user["userPhoto"] }}
+            avatarURI={this.state.user.userPicture}
+            userName={this.state.user.userName}
+            // avatar={
+            //   this._returnCustomAvatar()
+            // }
           />
         </View>
       </View>
@@ -145,28 +148,34 @@ class Header extends Component {
 // define your styles
 const styles = StyleSheet.create({
   container: {
-    paddingTop: heightPercentageToDP("2%"),
-    paddingBottom: heightPercentageToDP("2%"),
-    paddingLeft: widthPercentageToDP("4%"),
-    paddingRight: widthPercentageToDP("4%"),
-    marginBottom: heightPercentageToDP("2%"),
+    paddingTop: heightPercentageToDP("4%"),
+    paddingBottom: heightPercentageToDP("4%"),
+    paddingLeft: widthPercentageToDP("4.5%"),
+    paddingRight: widthPercentageToDP("4.5%"),
     flex: -1,
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center"
-    // backgroundColor: '#ffffff',
+    alignItems: "center",
+    height: heightPercentageToDP('10%'),
+    backgroundColor: '#ffffff',
   },
   containerLeft: {
     flexDirection: "column"
   },
   textLower: {
-    fontFamily: "Rubik-Bold",
-    fontSize: heightPercentageToDP("2.8%"),
-    paddingTop: heightPercentageToDP("0.3%")
+    fontFamily: "Poppins-Medium",
+    fontSize: heightPercentageToDP("1.9%"),
+    color: "#627d98"
   },
   textUpper: {
-    color: theme.colors.gray,
-    fontSize: heightPercentageToDP("1.5%")
+    height: heightPercentageToDP('5.5%'),
+    color: '#102a43',
+    fontFamily: "Poppins-Bold",
+    fontSize: heightPercentageToDP("3.7%"),
+  },
+  avatarStyle: {
+    borderRadius: 14,
+    overflow: 'hidden'
   }
 });
 

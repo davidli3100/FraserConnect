@@ -1,10 +1,10 @@
-const apiKey = "AIzaSyDa1y-6_GPITIhJKCb5gH7HCxcBmJy6goM";
-const authDomain = "fraserconnect1.firebaseapp.com";
-const databaseURL = "https://fraserconnect1.firebaseio.com";
-const projectId = "fraserconnect1";
-const storageBucket = "fraserconnect1.appspot.com";
-const messagingSenderId = "855800292598";
-const appId = "1:855800292598:web:83f1b1f00c7aa46f";
+const apiKey = "AIzaSyARCCmJnDNCv7SH6-cqUYGpC0vKesIXB_4";
+const authDomain = "fraser-connect.firebaseapp.com";
+const databaseURL = "https://fraser-connect.firebaseio.com";
+const projectId = "fraser-connect";
+const storageBucket = "fraser-connect.appspot.com";
+const messagingSenderId = "845387999936";
+const appId = "1:845387999936:web:b5481a9f8ac0f446";
 
 export {
   apiKey,
@@ -15,3 +15,4 @@ export {
   messagingSenderId,
   appId
 };
+
