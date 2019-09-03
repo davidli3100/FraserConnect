@@ -1,13 +1,14 @@
 import React from "react";
-import { createAppContainer, createBottomTabNavigator } from "react-navigation";
+import { createAppContainer, createBottomTabNavigator, createStackNavigator } from "react-navigation";
 import { Feather } from "@expo/vector-icons";
 import { heightPercentageToDP } from "../constants/Normalize";
 import FeedScreen from "../screens/feed";
 import VotingScreen from "../screens/voting";
 import EventsScreen from "../screens/events";
 import { colors } from "../constants/theme";
+import Announcement from '../screens/announcement'
 
-export default Tabs = createBottomTabNavigator(
+const Tabs = createBottomTabNavigator(
   
     {
     Home: FeedScreen,
@@ -32,33 +33,36 @@ export default Tabs = createBottomTabNavigator(
         return (
           <IconComponent
             name={iconName}
-            size={heightPercentageToDP("4%")}
+            size={heightPercentageToDP("3.5%")}
             color={tintColor}
+            style={{marginBottom: heightPercentageToDP('0.5%')}}
           />
         );
       }
     }),
     tabBarOptions: {
-      activeTintColor: colors.blue,
+      activeTintColor: '#10294c',
       inactiveTintColor: "#d4d4d4",
       showLabel: false,
       showIcon: true,
       style: {
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20,
         borderTopColor: "white",
-        shadowColor: "#000",
-        shadowOffset: {
-          width: 10,
-          height: 10
-        },
-        shadowOpacity: 0.57,
-        shadowRadius: 5.65,
-
-        elevation: 7,
-        height: heightPercentageToDP("7%")
-      }
+        height: heightPercentageToDP("6%")
+      },
+      keyBoardHidesTabBar: true
     }
   }
 );
+
+export default StackedTabs = createStackNavigator({
+  Main: Tabs,
+  Announcement: Announcement,
+},
+{
+  headerMode: 'none',
+  navigationOptions: {
+    headerVisible: false,
+  }
+ }
+)
 //   export default createAppContainer(TabNavigatorScreen);

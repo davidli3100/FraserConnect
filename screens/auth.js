@@ -2,13 +2,17 @@ import React, { Component } from "react";
 import {
   StyleSheet,
   View,
-  Button,
   AsyncStorage,
-  ActivityIndicator
+  ActivityIndicator,
+  Image,
+  Platform,
+  StatusBar
 } from "react-native";
+import {Button} from 'react-native-elements'
 import { default as Text } from "../components/Text";
 import * as GoogleSignIn from "expo-google-sign-in";
 import * as firebase from "firebase";
+import 'firebase/firestore'
 import {
   apiKey,
   appId,
@@ -18,8 +22,7 @@ import {
   databaseURL,
   projectId
 } from "../constants/firebaseConfig";
-import { heightPercentageToDP } from "../constants/Normalize";
-import { colors } from "../constants/theme";
+import { heightPercentageToDP, widthPercentageToDP } from "../constants/Normalize";
 
 GoogleSignIn.allowInClient();
 
@@ -40,10 +43,7 @@ if(!firebase.apps.length){
 export default class LoginScreen extends Component {
 
   static navigationOptions = {
-    title: 'Fraser Connect',
-    headerTitleStyle: {
-      color: 'rgba(0,0,0,0.8)'
-    }
+    header: null
   }
 
   constructor(props) {
@@ -63,32 +63,47 @@ export default class LoginScreen extends Component {
         scopes: ["profile", "openid"],
         isOfflineEnabled: false,
         isPromptEnabled: false,
-        clientId:
-          "com.googleusercontent.apps.855800292598-okhc8gk405slk750gukupgf12u82o5qi"
+        clientId: "845387999936-7cf7kksvhqa8gcs4489f2e4k61pgb5s5.apps.googleusercontent.com",
       });
     } catch ({ error }) {
+      this.setState({isLoggingIn: false})
       console.error("Error: " + error);
     }
     this._syncUserWithStateAsync();
   };
 
-  _syncUserWithStateAsync = async () => {
+  _syncUserWithStateAsync = async (user) => {
     const data = await GoogleSignIn.signInSilentlyAsync();
     if (data) {
-      this.setState({ isLoggingIn: true });
-      const photoURL = await GoogleSignIn.getPhotoAsync(256);
-      const userData = await GoogleSignIn.getCurrentUserAsync();
-      await this.setState({
-        user: {
-          ...userData.toJSON(),
-          photoURL: photoURL || userData.photoURL
-        }
-      });
-      const userAsyncData = await AsyncStorage.setItem("user", "true");
-      // console.log(userData)
-      await this._syncUserDataAsync();
-      this.props.navigation.navigate("App");
+        //build firebase auth
+        credential = firebase.auth.GoogleAuthProvider.credential(
+          data.auth["idToken"],
+          data.auth["accessToken"]
+        );
+        //build user
+        firebase
+          .auth()
+          .signInWithCredential(credential)
+          .then(user => {
+            console.log(user);
+          })
+          .catch(error => {
+            console.log("Firebase error: " + error);
+          });        
+        this.setState({ isLoggingIn: true });
+        const photoURL = await GoogleSignIn.getPhotoAsync(256);
+        const userData = await GoogleSignIn.getCurrentUserAsync();
+        await this.setState({
+          user: {
+            ...userData.toJSON(),
+            photoURL: photoURL || userData.photoURL
+          }
+        });
+        const userAsyncData = await AsyncStorage.setItem("user", "true");
+        try { this._syncUserDataAsync(); } catch(err) { console.log(err); this.setState({isLoggingIn: false}) }
+        this.props.navigation.navigate("App");
     } else {
+      this.setState({isLoggingIn: false})
       this.setState({ user: undefined });
     }
   };
@@ -100,18 +115,25 @@ export default class LoginScreen extends Component {
       ["userFirstName", this.state.user["firstName"]],
       ["userLastName", this.state.user["lastName"]],
       ["userEmail", this.state.user["email"]],
-      ["userPhoto", JSON.stringify(this.state.user["photoURL"])]
+      ["userPicture", JSON.stringify(this.state.user["photoURL"])]
     ]);
   };
 
   logInComponents = () => {
     return (
       <View style={styles.container}>
+        <StatusBar backgroundColor="#fff" barStyle="dark-content"/>
         <Text  style={styles.loginHeader}>Welcome,</Text>
         <Text style={styles.loginSubtitle}>sign in to continue</Text>
-        <Button style={styles.loginButton} onPress={this._signInAsync} title="Sign In With Google">
-          {this.buttonTitle}
+        <Image
+          style={styles.loginImage}
+          resizeMode="contain"
+          source={require('../assets/Images/login.png')}
+        />
+        <Button onPress={this._signInAsync} title="Sign In With Google" titleStyle={styles.loginButtonText} buttonStyle={styles.loginButton}>
+            {this.buttonTitle}
         </Button>
+        <Text style={styles.creditText}>Made with <Text style={styles.emoji}>{'\u2615'}</Text> by David Li and Jason Huang</Text>
       </View>
     );
   };
@@ -119,6 +141,7 @@ export default class LoginScreen extends Component {
   loginLoading = () => {
     return (
       <View style={styles.container}>
+      <StatusBar backgroundColor="#fff" barStyle="dark-content"/>
         <ActivityIndicator />
       </View>
     );
@@ -149,23 +172,7 @@ export default class LoginScreen extends Component {
       const { type, user } = await GoogleSignIn.signInAsync();
       if (type === "success") {
         console.log(user.auth);
-        //build firebase auth
-        credential = firebase.auth.GoogleAuthProvider.credential(
-          user.auth["idToken"],
-          user.auth["accessToken"]
-        );
-        //build user
-        firebase
-          .auth()
-          .signInWithCredential(credential)
-          .then(user => {
-            console.log(user);
-          })
-          .catch(error => {
-            console.log(error);
-          });
-
-        await this._syncUserWithStateAsync();
+        await this._syncUserWithStateAsync(user);
       } else {
         this.setState({ isLoggingIn: false })
       }
@@ -178,18 +185,60 @@ export default class LoginScreen extends Component {
 
 const styles = StyleSheet.create({
   container: {
+    paddingTop: Platform.OS === 'ios' ? 0 + heightPercentageToDP('13.5%') : StatusBar.currentHeight + heightPercentageToDP('13.5%'),
     flex: 1,
+    flexDirection: 'column',
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center"
   },
   loginHeader: {
-    fontWeight: '500',
-    fontSize: heightPercentageToDP('4%')
+    width: widthPercentageToDP('75%'),
+    lineHeight: heightPercentageToDP('4%'),
+    textAlign: "left",
+    fontFamily: "Poppins-Medium",
+    fontSize: heightPercentageToDP('3.75%')
   },
   loginSubtitle: {
-    color: '#7b849c',
-    fontWeight: '400',
+    width: widthPercentageToDP('75%'),
+    lineHeight: heightPercentageToDP('4%'),
+    textAlign: "left",
+    fontFamily: "Poppins-Medium",
+    color: '#9aa5b1',
     fontSize: heightPercentageToDP('3.75%')
+  },
+  loginImage: {
+    width: widthPercentageToDP('65%'),
+    height: heightPercentageToDP('47.44%')
+  },
+  loginButton: {
+    borderRadius: 7,
+    paddingLeft: widthPercentageToDP('8.5%'),
+    paddingRight: widthPercentageToDP('8.5%'), 
+    paddingTop: heightPercentageToDP('1.5%'),
+    paddingBottom: heightPercentageToDP('1.5%'),
+    backgroundColor: '#10294c',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: "#40000000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowRadius: 2.62,
+    elevation: 4
+
+  },
+  loginButtonText: {
+    color: "#e5e5e5",
+    fontFamily: "Poppins-SemiBold",
+    fontSize: heightPercentageToDP('2.4%')
+  },
+  creditText: {
+    marginTop: 'auto',
+    color: "rgba(0, 0, 0, 0.5)",
+    fontSize: heightPercentageToDP('1.5%'),
+    fontFamily: "Poppins-Regular",
+    marginBottom: heightPercentageToDP('0.75%')
   }
 });

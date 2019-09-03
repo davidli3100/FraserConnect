@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Platform, StatusBar, AsyncStorage } from 'react-native';
+import { StyleSheet, View, Platform, StatusBar, AsyncStorage, Text } from 'react-native';
 import FeedCard from '../components/feed/CustomCard';
 import {FlatList, SafeAreaView} from 'react-navigation'
 import Header from '../components/global/Header';
@@ -15,6 +15,8 @@ import {
   databaseURL,
   projectId
 } from "../constants/firebaseConfig";
+import Events from '../components/feed/Events';
+import FloatingActionButton from '../components/global/floatingAction';
 
 const firebaseConfig = {
   apiKey: apiKey,
@@ -31,6 +33,7 @@ if(!firebase.apps.length){
   var db = firebase.firestore();
 }
 var announcementsRef = db.collection("announcements");
+var eventsRef = db.collection("events");
 var statisticsRef = db.collection("statistics");
 
 export default class FeedScreen extends Component {
@@ -46,25 +49,58 @@ export default class FeedScreen extends Component {
   componentDidMount() {
     this._hydrateUserState();
     this._hydrateInitialFeed();
+    this._hydrateEventsFeed();
   }
 
+  isToday = (date) => {
+    someDate = new Date(date*1000)
+    const today = new Date()
+    return someDate.getDate() == today.getDate() &&
+      someDate.getMonth() == today.getMonth() &&
+      someDate.getFullYear() == today.getFullYear()
+  }
+
+  _dataReducer = (doc) => {
+
+    const reduced = {
+      key: doc.id,
+      ...doc.data()
+    }
+
+    return reduced
+  }
+  
+  _hydrateEventsFeed = async () => {
+    //get the first 6 announcements in the feed (desc order)
+    data = await eventsRef.where("endDate", ">=", firebase.firestore.Timestamp.now()).orderBy("endDate").limit(6).get().catch(err => console.log(err))
+    this.setState({
+      events: data.docs.map(doc => this._dataReducer(doc)),
+    })
+  }
 
     renderFeedCard = (props) => {
       return (
-        <FeedCard post={props.item}/>
+        <FeedCard navigation={this.props.navigation} post={props.item}/>
       )
     }
+
 
     render() {
       return (
       <SafeAreaView forceInset={{ bottom: 'never' }}>
+      <StatusBar backgroundColor="white" barStyle="dark-content"/>
         <View style={styles.container}>
-            <Header screenName="Announcements"/>
+            <Header headerDescription="Here are today's events"/>
+            <Events refresh={this._hydrateEventsFeed} data={this.state.events}/>
             <View style={styles.flatListContainer}>
+              <Text style={styles.feedHeader}>
+                Announcements
+              </Text>
               <FlatList
+                showsVerticalScrollIndicator={false}
                 onRefresh={() => {this._refreshFeed()}}
                 onEndReached={() => {this._getInfinityScrollFeed()}}
-                onEndReachedThreshold={0.45}
+                onEndReachedThreshold={0.4}
                 extraData={this.state.extraData}
                 refreshing={this.state.refreshing}
                 style={styles.flatList}
@@ -74,6 +110,7 @@ export default class FeedScreen extends Component {
                 keyExtractor={(item, index) => item.title + item.poster + new Date().setTime(item.datePosted.seconds*1000).toString()}
               />
             </View>
+            <FloatingActionButton/>
         </View>
       </SafeAreaView>
       );
@@ -132,10 +169,14 @@ export default class FeedScreen extends Component {
   };
 
   _hydrateInitialFeed = async () => {
+    this.setState({
+      refreshing: true
+    })
     //get the first 10 announcements in the feed (desc order)
     data = await announcementsRef.orderBy("datePosted", "desc").limit(8).get()
     this.setState({
       announcements: data.docs.map(doc => doc.data()),
+      refreshing: false
     })
     return true
   }
@@ -180,13 +221,21 @@ export default class FeedScreen extends Component {
     container: {
       paddingTop: Platform.OS === 'ios' ? 0 : StatusBar.currentHeight,
       height: heightPercentageToDP('100%'),
-      backgroundColor: 'rgba(254,254,254,1)',
+      backgroundColor: '#F0F4F8',
     },
     flatListContainer: {
+      marginTop: heightPercentageToDP('2%'),
       width: widthPercentageToDP('100%'),
       flex: 1
     },
     flatList: {
       marginBottom: heightPercentageToDP('6%')
+    },
+    feedHeader: {
+      marginLeft: widthPercentageToDP('4.5%'),
+      fontFamily: "Poppins-SemiBold",
+      fontSize: heightPercentageToDP('2.5%'),
+      color: '#102A43',
+      marginBottom: heightPercentageToDP('1%')
     }
 });

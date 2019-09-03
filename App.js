@@ -4,6 +4,7 @@ import * as Font from "expo-font";
 import AppNavigator from "./navigation/AppNavigator";
 import { YellowBox } from 'react-native';
 import _ from 'lodash';
+import { SafeAreaView } from "react-navigation";
 
 //we don't like warnings for useless stuff
 YellowBox.ignoreWarnings(['Setting a timer']);
@@ -38,16 +39,18 @@ export default class App extends React.Component {
       Font.loadAsync({
         // This is the font that we are using for our tab bar
         // ...Icon.Ionicons.font,
-        "Rubik-Black": require("./assets/fonts/Rubik-Black.ttf"),
-        "Rubik-BlackItalic": require("./assets/fonts/Rubik-BlackItalic.ttf"),
-        "Rubik-Bold": require("./assets/fonts/Rubik-Bold.ttf"),
-        "Rubik-BoldItalic": require("./assets/fonts/Rubik-BoldItalic.ttf"),
-        "Rubik-Italic": require("./assets/fonts/Rubik-Italic.ttf"),
-        "Rubik-Light": require("./assets/fonts/Rubik-Light.ttf"),
-        "Rubik-LightItalic": require("./assets/fonts/Rubik-LightItalic.ttf"),
-        "Rubik-Medium": require("./assets/fonts/Rubik-Medium.ttf"),
-        "Rubik-MediumItalic": require("./assets/fonts/Rubik-MediumItalic.ttf"),
-        "Rubik-Regular": require("./assets/fonts/Rubik-Regular.ttf")
+        "Poppins-Black": require("./assets/fonts/Poppins-Black.ttf"),
+        "Poppins-BlackItalic": require("./assets/fonts/Poppins-BlackItalic.ttf"),
+        "Poppins-Bold": require("./assets/fonts/Poppins-Bold.ttf"),
+        "Poppins-BoldItalic": require("./assets/fonts/Poppins-BoldItalic.ttf"),
+        "Poppins-Light": require("./assets/fonts/Poppins-Light.ttf"),
+        "Poppins-LightItalic": require("./assets/fonts/Poppins-LightItalic.ttf"),
+        "Poppins-Medium": require("./assets/fonts/Poppins-Medium.ttf"),
+        "Poppins-MediumItalic": require("./assets/fonts/Poppins-MediumItalic.ttf"),
+        "Poppins-Regular": require("./assets/fonts/Poppins-Regular.ttf"),
+        "Poppins-RegularItalic": require("./assets/fonts/Poppins-RegularItalic.ttf"),
+        "Poppins-SemiBold": require("./assets/fonts/Poppins-SemiBold.ttf"),
+        "Poppins-SemiBoldItalic": require("./assets/fonts/Poppins-SemiBoldItalic.ttf"),
       })
     ]);
   };
