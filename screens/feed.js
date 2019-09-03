@@ -88,7 +88,6 @@ export default class FeedScreen extends Component {
     render() {
       return (
       <SafeAreaView forceInset={{ bottom: 'never' }}>
-      <StatusBar backgroundColor="white" barStyle="dark-content"/>
         <View style={styles.container}>
             <Header headerDescription="Here are today's events"/>
             <Events refresh={this._hydrateEventsFeed} data={this.state.events}/>

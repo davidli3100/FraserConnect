@@ -122,7 +122,7 @@ export default class LoginScreen extends Component {
   logInComponents = () => {
     return (
       <View style={styles.container}>
-        <StatusBar backgroundColor="#fff" barStyle="dark-content"/>
+        <StatusBar barStyle="light-content" backgroundColor="#ffffff" />
         <Text  style={styles.loginHeader}>Welcome,</Text>
         <Text style={styles.loginSubtitle}>sign in to continue</Text>
         <Image
@@ -141,7 +141,6 @@ export default class LoginScreen extends Component {
   loginLoading = () => {
     return (
       <View style={styles.container}>
-      <StatusBar backgroundColor="#fff" barStyle="dark-content"/>
         <ActivityIndicator />
       </View>
     );

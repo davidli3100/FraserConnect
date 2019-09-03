@@ -93,7 +93,6 @@ class Events extends Component {
   render() {
     return (
       <SafeAreaView forceInset={{ bottom: 'never' }}>
-      <StatusBar backgroundColor="#fff" barStyle="dark-content"/>
         <View style={styles.container}>
           <Header headerDescription="Here's what's happening at Fraser"/>
           <View style={styles.eventsContainer}>

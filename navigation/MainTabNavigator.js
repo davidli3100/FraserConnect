@@ -7,6 +7,7 @@ import VotingScreen from "../screens/voting";
 import EventsScreen from "../screens/events";
 import { colors } from "../constants/theme";
 import Announcement from '../screens/announcement'
+import Profile from "../screens/profile";
 
 const Tabs = createBottomTabNavigator(
   
@@ -57,6 +58,7 @@ const Tabs = createBottomTabNavigator(
 export default StackedTabs = createStackNavigator({
   Main: Tabs,
   Announcement: Announcement,
+  Profile: Profile
 },
 {
   headerMode: 'none',
