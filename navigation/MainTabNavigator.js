@@ -8,6 +8,7 @@ import EventsScreen from "../screens/events";
 import { colors } from "../constants/theme";
 import Announcement from '../screens/announcement'
 import Profile from "../screens/profile";
+import TopProfileTabs from "./profileTopTab";
 
 const Tabs = createBottomTabNavigator(
   

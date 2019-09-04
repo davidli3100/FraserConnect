@@ -105,6 +105,7 @@ export default class FeedScreen extends Component {
                 style={styles.flatList}
                 removeClippedSubviews
                 data={this.state.announcements}
+                ListFooterComponent={<View style={{marginBottom: heightPercentageToDP('6%')}}></View>}
                 renderItem={this.renderFeedCard}
                 keyExtractor={(item, index) => item.title + item.poster + new Date().setTime(item.datePosted.seconds*1000).toString()}
               />
@@ -205,7 +206,6 @@ export default class FeedScreen extends Component {
     return data.data().numPosts
   }
 
-
   _getInfinityScrollFeed = async () => {
       announcementsRef.orderBy("datePosted", "desc").startAfter(this.state.announcements[this.state.announcements.length-1].datePosted).limit(5).get().then((data) => {
         parsedData = data.docs.map(doc => doc.data())
@@ -228,7 +228,7 @@ export default class FeedScreen extends Component {
       flex: 1
     },
     flatList: {
-      marginBottom: heightPercentageToDP('6%')
+      // marginBottom: heightPercentageToDP('6%')
     },
     feedHeader: {
       marginLeft: widthPercentageToDP('4.5%'),
