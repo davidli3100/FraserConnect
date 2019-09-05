@@ -7,8 +7,9 @@ import Menu, { MenuItem, MenuDivider } from "react-native-material-menu";
 //import menu and menu item
 import { Avatar } from "react-native-elements";
 import { widthPercentageToDP, heightPercentageToDP} from "../../constants/Normalize";
+import { withNavigation } from "react-navigation";
 
-export default class CustomMenu extends Component {
+class CustomMenu extends Component {
 
   _returnCustomAvatar = (photoUri, name) => {
     if(photoUri && photoUri !== undefined) {
@@ -94,7 +95,7 @@ export default class CustomMenu extends Component {
         <Menu
           ref={this.setMenuRef}
           button={
-            <TouchableOpacity onPress={this.showMenu}>
+            <TouchableOpacity onPress={() => {this.props.navigation.navigate('Profile')}}>
               {this._returnCustomAvatar(this.props.avatarURI, this.props.userName)}
             </TouchableOpacity>
           }
@@ -113,3 +114,5 @@ const styles = StyleSheet.create({
     overflow: 'hidden'
   }
 });
+
+export default withNavigation(CustomMenu)

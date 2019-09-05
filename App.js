@@ -2,7 +2,7 @@ import React from "react";
 import { AppLoading } from "expo";
 import * as Font from "expo-font";
 import AppNavigator from "./navigation/AppNavigator";
-import { YellowBox } from 'react-native';
+import { YellowBox} from 'react-native';
 import _ from 'lodash';
 import { SafeAreaView } from "react-navigation";
 
@@ -30,7 +30,7 @@ export default class App extends React.Component {
         />
       );
     } else {
-      return <AppNavigator />;
+      return <SafeAreaView style={{flex:1}}><AppNavigator /></SafeAreaView>;
     }
   }
 
