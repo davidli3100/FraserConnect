@@ -5,6 +5,19 @@ import {FloatingAction} from 'react-native-floating-action'
 import { Feather } from "@expo/vector-icons";
 import { widthPercentageToDP, heightPercentageToDP } from '../../constants/Normalize';
 
+function SubmitData(type) {
+  switch (type) {
+    case "announcement":
+      // Do announcement things
+      return;
+    case "event":
+      // Do event things
+      return;
+    case "election":
+      // Do election things
+      return;
+  }
+}
 
 // create a component
 class FloatingActionButton extends Component {
