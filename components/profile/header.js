@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     userName: {
         textAlign: 'center',
         fontFamily: "Poppins-SemiBold",
-        fontSize: heightPercentageToDP('2.2%'),
+        fontSize: heightPercentageToDP('2.1%'),
         color: '#334E68'
     },
     userID: {
