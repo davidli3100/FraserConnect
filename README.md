@@ -58,11 +58,11 @@
 - [About the Project](#about-the-project)
   - [Built With](#built-with)
 - [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
+  <!-- - [Prerequisites](#prerequisites) -->
   - [Installation](#installation)
 - [Usage](#usage)
 - [Roadmap](#roadmap)
-- [Contributing](#contributing)
+- [Maintainance](#maintainance)
 - [License](#license)
 - [Contact](#contact)
 - [Acknowledgements](#acknowledgements)
@@ -73,7 +73,7 @@
 
 <!-- [![PinBoard Screen Shot][product-screenshot]](https://example.com) -->
 
-_Filler Text_
+This project is still under development. This will be replaced with a proper introduction after we release the app publicly.
 
 ### Built With
 
@@ -85,7 +85,7 @@ _Filler Text_
 
 ## Getting Started
 
-To get a local copy up and running follow these simple steps.
+<!-- To get a local copy up and running follow these simple steps. -->
 
 <!-- ### Prerequisites
 
@@ -99,7 +99,7 @@ npm install npm@latest -g
 
 ### Installation
 
-_Add app store links when published_
+_App Store links will be added when publicly released_
 
 <!-- 1. Clone the FraserConnect
 ```sh
@@ -114,9 +114,7 @@ npm install
 
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
+_This space will be updated soon_
 
 <!-- ROADMAP -->
 
