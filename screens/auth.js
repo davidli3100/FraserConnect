@@ -87,7 +87,7 @@ export default class LoginScreen extends Component {
           .signInWithCredential(credential)
           .then(user => {
             console.log(user);
-            Sentry.captureEvent("Firebase user: " + user + '\n' + "Google data: " + data)
+            Sentry.captureMessage("Firebase user: " + JSON.stringify(user) + '\n' + "Google data: " + JSON.stringify(data.auth), Sentry.Severity.Info)
           })
           .catch(error => {
             console.log("Firebase error: " + error);
