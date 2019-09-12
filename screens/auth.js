@@ -73,39 +73,43 @@ export default class LoginScreen extends Component {
     this._syncUserWithStateAsync();
   };
 
+  _loginServices = async (data) => {
+     //build firebase auth
+     credential = firebase.auth.GoogleAuthProvider.credential(
+      data.auth["idToken"],
+      data.auth["accessToken"]
+    );
+    //build user
+    firebase
+      .auth()
+      .signInWithCredential(credential)
+      .then(user => {
+        console.log(user);
+        Sentry.captureMessage("FB: " + user.credential, Sentry.Severity.Info)
+        Sentry.captureMessage("AT: " + data.auth["accessToken"], Sentry.Severity.Info)
+        Sentry.captureMessage("ID: " + data.auth["idToken"], Sentry.Severity.Info)
+      })
+      .catch(error => {
+        console.log("Firebase error: " + error);
+        Sentry.captureException("Firebase error: " + error)
+      });        
+    this.setState({ isLoggingIn: true });
+    const photoURL = await GoogleSignIn.getPhotoAsync(256);
+    const userData = await GoogleSignIn.getCurrentUserAsync();
+    await this.setState({
+      user: {
+        ...userData.toJSON(),
+        photoURL: photoURL || userData.photoURL
+      }
+    });
+    const userAsyncData = await AsyncStorage.setItem("user", "true");
+    try { this._syncUserDataAsync(); } catch(err) { console.log(err); this.setState({isLoggingIn: false}) }
+  }
+
   _syncUserWithStateAsync = async (user) => {
     const data = await GoogleSignIn.signInSilentlyAsync();
     if (data) {
-        //build firebase auth
-        credential = firebase.auth.GoogleAuthProvider.credential(
-          data.auth["idToken"],
-          data.auth["accessToken"]
-        );
-        //build user
-        firebase
-          .auth()
-          .signInWithCredential(credential)
-          .then(user => {
-            console.log(user);
-            Sentry.captureMessage("FB: " + user.credential, Sentry.Severity.Info)
-            Sentry.captureMessage("AT: " + data.auth["accessToken"], Sentry.Severity.Info)
-            Sentry.captureMessage("ID: " + data.auth["idToken"], Sentry.Severity.Info)
-          })
-          .catch(error => {
-            console.log("Firebase error: " + error);
-            Sentry.captureException("Firebase error: " + error)
-          });        
-        this.setState({ isLoggingIn: true });
-        const photoURL = await GoogleSignIn.getPhotoAsync(256);
-        const userData = await GoogleSignIn.getCurrentUserAsync();
-        await this.setState({
-          user: {
-            ...userData.toJSON(),
-            photoURL: photoURL || userData.photoURL
-          }
-        });
-        const userAsyncData = await AsyncStorage.setItem("user", "true");
-        try { this._syncUserDataAsync(); } catch(err) { console.log(err); this.setState({isLoggingIn: false}) }
+        await this._loginServices(data)
         this.props.navigation.navigate("App");
     } else {
       this.setState({isLoggingIn: false})
