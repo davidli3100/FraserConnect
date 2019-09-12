@@ -5,6 +5,13 @@ import AppNavigator from "./navigation/AppNavigator";
 import { YellowBox} from 'react-native';
 import _ from 'lodash';
 import { SafeAreaView } from "react-navigation";
+import * as Sentry from 'sentry-expo';
+
+Sentry.init({
+  dsn: 'https://01f8689097824ee996314a1a805fae70@sentry.io/1515495',
+  enableInExpoDevelopment: true,
+  debug: true
+});
 
 //we don't like warnings for useless stuff
 YellowBox.ignoreWarnings(['Setting a timer']);

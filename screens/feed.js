@@ -17,6 +17,7 @@ import {
 } from "../constants/firebaseConfig";
 import Events from '../components/feed/Events';
 import FloatingActionButton from '../components/global/floatingAction';
+import * as Sentry from 'sentry-expo'
 
 const firebaseConfig = {
   apiKey: apiKey,
@@ -72,7 +73,7 @@ export default class FeedScreen extends Component {
   
   _hydrateEventsFeed = async () => {
     //get the first 6 announcements in the feed (desc order)
-    data = await eventsRef.where("endDate", ">=", firebase.firestore.Timestamp.now()).orderBy("endDate").limit(6).get().catch(err => console.log(err))
+    data = await eventsRef.where("endDate", ">=", firebase.firestore.Timestamp.now()).orderBy("endDate").limit(6).get().catch(err => {console.log(err); Sentry.captureException('Firebase Events Ref Error: ' + err); this._hydrateEventsFeed() })
     this.setState({
       events: data.docs.map(doc => this._dataReducer(doc)),
     })
@@ -173,7 +174,7 @@ export default class FeedScreen extends Component {
       refreshing: true
     })
     //get the first 10 announcements in the feed (desc order)
-    data = await announcementsRef.orderBy("datePosted", "desc").limit(8).get()
+    data = await announcementsRef.orderBy("datePosted", "desc").limit(8).get().catch(err => {console.log(err); Sentry.captureException('Firebase Feed Error: ' + err); this._hydrateInitialFeed()})
     this.setState({
       announcements: data.docs.map(doc => doc.data()),
       refreshing: false

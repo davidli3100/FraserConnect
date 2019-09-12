@@ -23,6 +23,7 @@ import {
   projectId
 } from "../constants/firebaseConfig";
 import { heightPercentageToDP, widthPercentageToDP } from "../constants/Normalize";
+import * as Sentry from 'sentry-expo';
 
 GoogleSignIn.allowInClient();
 
@@ -86,9 +87,11 @@ export default class LoginScreen extends Component {
           .signInWithCredential(credential)
           .then(user => {
             console.log(user);
+            Sentry.captureEvent("Firebase user: " + user + '\n' + "Google data: " + data)
           })
           .catch(error => {
             console.log("Firebase error: " + error);
+            Sentry.captureException("Firebase error: " + error)
           });        
         this.setState({ isLoggingIn: true });
         const photoURL = await GoogleSignIn.getPhotoAsync(256);

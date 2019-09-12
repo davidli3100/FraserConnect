@@ -36,6 +36,18 @@
     "android": {
       "package": "com.jfss.fraserconnect",
       "googleServicesFile": "./google-services.json"
+    },
+    "hooks": {
+      "postPublish": [
+        {
+          "file": "sentry-expo/upload-sourcemaps",
+          "config": {
+            "organization": "pinboard-education",
+            "project": "pinboard",
+            "authToken": "bcbc2f7c590443e19e1cf70de6be3d6c1da643dc0e6c4cf699b66ca652b4bf99",
+          }
+        }
+      ]
     }
   }
 }
