@@ -74,6 +74,7 @@
 <!-- [![PinBoard Screen Shot][product-screenshot]](https://example.com) -->
 
 This project is still under development. This will be replaced with a proper introduction after we release the app publicly.
+As of Jan 2020, the relase of Pinboard is on hold due to circumstances out of our control.
 
 ### Built With
 
